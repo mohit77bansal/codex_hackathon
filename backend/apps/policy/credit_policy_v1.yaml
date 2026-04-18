@@ -1,0 +1,25 @@
+version: v1
+name: "Credit Policy v1"
+hard_boundaries:
+  min_cibil_score: 640
+  min_vintage_months: 18
+  max_amount_by_vintage:
+    - { min_vintage_months: 18, max_amount_inr: 2500000 }
+    - { min_vintage_months: 36, max_amount_inr: 5000000 }
+    - { min_vintage_months: 60, max_amount_inr: 10000000 }
+  disallowed_industries:
+    - "Crypto Trading"
+    - "Cash-on-cash Lending"
+  max_dpd_90_plus_count: 0
+  max_utilization_pct: 85
+  min_kyc_match_pct: 92
+  min_document_authenticity_score: 80
+exception_eligible:
+  conditions:
+    - "risk-based pricing (+100 to +200 bps)"
+    - "reduced tenure (cap at 24 months)"
+    - "collateral top-up"
+    - "anchor-confirmed invoice assignment"
+soft_guidance:
+  preferred_utilization_pct_max: 60
+  preferred_buyer_concentration_pct_max: 55

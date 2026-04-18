@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg: #020617;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-ring: rgba(255, 255, 255, 0.08);
+  --ink: #f8fafc;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Avenir Next", system-ui, sans-serif;
+  color: var(--ink);
+  background: radial-gradient(ellipse at 20% 10%, rgba(99, 102, 241, 0.18), transparent 45%),
+    radial-gradient(ellipse at 80% 0%, rgba(236, 72, 153, 0.12), transparent 55%),
+    radial-gradient(ellipse at 50% 110%, rgba(14, 165, 233, 0.15), transparent 55%), #020617;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 40%, transparent 85%);
+  animation: gridshift 40s linear infinite;
+}
+
+@keyframes gridshift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 440px 440px, 440px 440px;
+  }
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(130deg, rgba(129, 140, 248, 0.55), rgba(232, 121, 249, 0.35), rgba(56, 189, 248, 0.45));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 80ms !important;
+  }
+}

@@ -1,0 +1,2193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision Swarm OS</title>
+<style>
+  :root{
+    --bg:#f5efe4;
+    --paper:#fffaf1;
+    --paper-2:#f3ead7;
+    --ink:#1b1a17;
+    --muted:#60584d;
+    --line:rgba(27,26,23,.12);
+    --line-strong:rgba(27,26,23,.24);
+    --navy:#17344f;
+    --teal:#0f766e;
+    --amber:#c97822;
+    --crimson:#b44432;
+    --olive:#66753a;
+    --plum:#5e466f;
+    --white:#fffdf8;
+    --shadow:0 18px 40px rgba(27,26,23,.08);
+    --radius-xl:28px;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --max:1240px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Avenir Next","Segoe UI",sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 15%, rgba(201,120,34,.16), transparent 24%),
+      radial-gradient(circle at 82% 12%, rgba(15,118,110,.14), transparent 22%),
+      linear-gradient(180deg, #fbf6ec 0%, #f5efe4 48%, #efe6d5 100%);
+    overflow-x:hidden;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      linear-gradient(rgba(27,26,23,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(27,26,23,.025) 1px, transparent 1px);
+    background-size:28px 28px;
+    mask-image:linear-gradient(180deg, rgba(0,0,0,.6), transparent 90%);
+  }
+
+  a{color:inherit}
+  .wrap{width:min(var(--max), calc(100% - 40px)); margin:0 auto}
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+    backdrop-filter:blur(18px);
+    background:rgba(255,250,241,.75);
+    border-bottom:1px solid var(--line);
+  }
+
+  .topbar-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:14px 0;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    font-size:12px;
+  }
+
+  .brand-mark{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    color:var(--white);
+    background:linear-gradient(135deg, var(--navy), var(--plum));
+    box-shadow:var(--shadow);
+    font-size:16px;
+  }
+
+  .nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .nav a{
+    text-decoration:none;
+    font-size:12px;
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.55);
+    border:1px solid var(--line);
+  }
+
+  section{padding:34px 0}
+
+  .hero{
+    padding:56px 0 28px;
+    position:relative;
+  }
+
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.08fr .92fr;
+    gap:28px;
+    align-items:end;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid rgba(23,52,79,.16);
+    background:rgba(255,255,255,.66);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--navy);
+  }
+
+  .eyebrow-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--teal);
+    box-shadow:0 0 0 10px rgba(15,118,110,.08);
+    animation:pulse 2.4s infinite;
+  }
+
+  @keyframes pulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.18)}
+  }
+
+  .hero h1{
+    margin:18px 0 18px;
+    font-family:"Iowan Old Style","Palatino Linotype",serif;
+    font-size:clamp(44px, 8vw, 92px);
+    line-height:.93;
+    letter-spacing:-.05em;
+    font-weight:700;
+  }
+
+  .hero h1 .accent{
+    color:var(--navy);
+  }
+
+  .hero-copy{
+    max-width:700px;
+    font-size:18px;
+    line-height:1.7;
+    color:var(--muted);
+    margin:0 0 24px;
+  }
+
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:18px;
+  }
+
+  .btn{
+    border:none;
+    border-radius:999px;
+    padding:14px 18px;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{
+    color:var(--white);
+    background:linear-gradient(135deg, var(--navy), var(--teal));
+    box-shadow:0 16px 30px rgba(23,52,79,.2);
+  }
+  .btn-secondary{
+    color:var(--ink);
+    background:rgba(255,255,255,.65);
+    border:1px solid var(--line);
+  }
+
+  .hero-metrics{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:12px;
+  }
+
+  .metric{
+    padding:16px 18px;
+    background:rgba(255,255,255,.55);
+    border:1px solid var(--line);
+    border-radius:18px;
+  }
+
+  .metric strong{
+    display:block;
+    font-size:26px;
+    line-height:1;
+    margin-bottom:6px;
+    color:var(--navy);
+  }
+
+  .metric span{
+    font-size:12px;
+    line-height:1.45;
+    color:var(--muted);
+  }
+
+  .quick-shell{
+    margin-top:22px;
+    padding:22px;
+    border-radius:30px;
+    background:rgba(255,255,255,.58);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+  }
+
+  .quick-grid{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:18px;
+    align-items:start;
+  }
+
+  .quick-pitch{
+    padding:22px;
+    border-radius:24px;
+    background:linear-gradient(155deg, rgba(23,52,79,.95), rgba(15,118,110,.88));
+    color:var(--white);
+  }
+
+  .quick-kicker{
+    display:block;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    opacity:.74;
+    margin-bottom:10px;
+  }
+
+  .quick-pitch h3{
+    margin:0 0 12px;
+    font-family:"Iowan Old Style","Palatino Linotype",serif;
+    font-size:38px;
+    line-height:1.05;
+    letter-spacing:-.04em;
+  }
+
+  .quick-pitch p{
+    margin:0;
+    font-size:15px;
+    line-height:1.7;
+    color:rgba(255,255,255,.82);
+  }
+
+  .quick-stack{
+    display:grid;
+    gap:12px;
+  }
+
+  .quick-card{
+    padding:18px;
+    border-radius:22px;
+    background:var(--paper);
+    border:1px solid var(--line);
+  }
+
+  .quick-card strong{
+    display:block;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:8px;
+  }
+
+  .quick-card h4{
+    margin:0 0 8px;
+    font-size:20px;
+    line-height:1.15;
+  }
+
+  .quick-card p{
+    margin:0;
+    font-size:14px;
+    line-height:1.65;
+    color:var(--muted);
+  }
+
+  .quick-bottom{
+    margin-top:16px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:14px;
+    align-items:center;
+  }
+
+  .domain-strip{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .domain-chip{
+    padding:10px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.76);
+    border:1px solid var(--line);
+    font-size:12px;
+    font-weight:800;
+    color:var(--navy);
+  }
+
+  .quick-note{
+    padding:14px 16px;
+    border-radius:18px;
+    background:rgba(201,120,34,.08);
+    border:1px solid rgba(201,120,34,.14);
+    font-size:13px;
+    line-height:1.6;
+    color:var(--ink);
+  }
+
+  .quick-note strong{
+    color:var(--amber);
+  }
+
+  .hero-panel{
+    position:relative;
+    padding:24px;
+    border-radius:var(--radius-xl);
+    background:
+      linear-gradient(160deg, rgba(255,255,255,.86), rgba(255,250,241,.75)),
+      linear-gradient(135deg, rgba(23,52,79,.08), rgba(94,70,111,.06));
+    border:1px solid rgba(23,52,79,.12);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    min-height:470px;
+  }
+
+  .hero-panel::after{
+    content:"";
+    position:absolute;
+    inset:16px;
+    border-radius:24px;
+    border:1px dashed rgba(23,52,79,.1);
+    pointer-events:none;
+  }
+
+  .panel-label{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin-bottom:16px;
+  }
+
+  .decision-spine{
+    display:grid;
+    gap:16px;
+    position:relative;
+  }
+
+  .spine-line{
+    position:absolute;
+    left:23px;
+    top:28px;
+    bottom:28px;
+    width:2px;
+    background:linear-gradient(180deg, rgba(15,118,110,.12), rgba(23,52,79,.22), rgba(180,68,50,.18));
+  }
+
+  .spine-node{
+    position:relative;
+    display:grid;
+    grid-template-columns:46px 1fr;
+    gap:16px;
+    align-items:start;
+  }
+
+  .spine-dot{
+    width:46px;
+    height:46px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    color:var(--white);
+    font-weight:900;
+    z-index:1;
+    box-shadow:0 10px 24px rgba(23,52,79,.18);
+  }
+
+  .spine-node:nth-child(2) .spine-dot{background:linear-gradient(135deg, var(--navy), #375e82)}
+  .spine-node:nth-child(3) .spine-dot{background:linear-gradient(135deg, var(--teal), #48a39c)}
+  .spine-node:nth-child(4) .spine-dot{background:linear-gradient(135deg, var(--amber), #d69b55)}
+  .spine-node:nth-child(5) .spine-dot{background:linear-gradient(135deg, var(--crimson), #d6755f)}
+
+  .spine-card{
+    padding:16px 16px 14px;
+    border-radius:18px;
+    background:rgba(255,255,255,.7);
+    border:1px solid var(--line);
+  }
+
+  .spine-card h3{
+    margin:0 0 6px;
+    font-size:16px;
+  }
+
+  .spine-card p{
+    margin:0;
+    font-size:13px;
+    line-height:1.6;
+    color:var(--muted);
+  }
+
+  .section-head{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:18px;
+    margin-bottom:18px;
+  }
+
+  .section-head h2{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",serif;
+    font-size:clamp(30px, 5vw, 56px);
+    letter-spacing:-.04em;
+    line-height:.98;
+  }
+
+  .section-head p{
+    max-width:560px;
+    margin:0;
+    font-size:15px;
+    line-height:1.7;
+    color:var(--muted);
+  }
+
+  .cards-3{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:18px;
+  }
+
+  .story-card{
+    padding:22px;
+    background:rgba(255,255,255,.6);
+    border:1px solid var(--line);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+  }
+
+  .story-card .kicker{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:10px;
+  }
+
+  .story-card h3{
+    margin:0 0 8px;
+    font-size:22px;
+    line-height:1.15;
+  }
+
+  .story-card p{
+    margin:0;
+    font-size:14px;
+    line-height:1.7;
+    color:var(--muted);
+  }
+
+  .split{
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    gap:22px;
+    align-items:start;
+  }
+
+  .principles{
+    display:grid;
+    gap:14px;
+  }
+
+  .principle{
+    display:grid;
+    grid-template-columns:56px 1fr;
+    gap:14px;
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.62);
+    border:1px solid var(--line);
+  }
+
+  .principle-icon{
+    width:56px;
+    height:56px;
+    border-radius:18px;
+    display:grid;
+    place-items:center;
+    font-size:24px;
+    background:linear-gradient(135deg, rgba(23,52,79,.12), rgba(15,118,110,.08));
+  }
+
+  .principle h3{
+    margin:0 0 6px;
+    font-size:18px;
+  }
+
+  .principle p{
+    margin:0;
+    font-size:14px;
+    line-height:1.65;
+    color:var(--muted);
+  }
+
+  .quote-panel{
+    padding:26px;
+    border-radius:24px;
+    background:linear-gradient(155deg, rgba(23,52,79,.94), rgba(15,118,110,.88));
+    color:var(--white);
+    box-shadow:var(--shadow);
+    position:sticky;
+    top:96px;
+  }
+
+  .quote-panel .label{
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    opacity:.7;
+    font-weight:800;
+  }
+
+  .quote-panel blockquote{
+    margin:18px 0;
+    font-family:"Iowan Old Style","Palatino Linotype",serif;
+    font-size:36px;
+    line-height:1.08;
+    letter-spacing:-.04em;
+  }
+
+  .quote-panel p{
+    margin:0;
+    font-size:15px;
+    line-height:1.7;
+    color:rgba(255,255,255,.82);
+  }
+
+  .deep-dive{
+    margin-top:8px;
+    padding:28px 0 10px;
+    border-top:1px solid var(--line);
+  }
+
+  .deep-head{
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    gap:18px;
+    align-items:end;
+    margin-bottom:18px;
+  }
+
+  .deep-head h2{
+    margin:10px 0 0;
+    font-family:"Iowan Old Style","Palatino Linotype",serif;
+    font-size:clamp(30px, 5vw, 52px);
+    line-height:.98;
+    letter-spacing:-.04em;
+  }
+
+  .deep-head p{
+    margin:0;
+    font-size:15px;
+    line-height:1.7;
+    color:var(--muted);
+  }
+
+  .sim-shell{
+    padding:20px;
+    background:rgba(255,253,248,.82);
+    border:1px solid var(--line);
+    border-radius:30px;
+    box-shadow:var(--shadow);
+  }
+
+  .sim-reading{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:12px;
+    margin-bottom:18px;
+  }
+
+  .reading-card{
+    padding:16px 18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.62);
+    border:1px solid var(--line);
+  }
+
+  .reading-card strong{
+    display:block;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--navy);
+    margin-bottom:8px;
+  }
+
+  .reading-card span{
+    display:block;
+    font-size:13px;
+    line-height:1.55;
+    color:var(--muted);
+  }
+
+  .sim-top{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:16px;
+    align-items:center;
+    margin-bottom:18px;
+  }
+
+  .tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .tab{
+    border:none;
+    border-radius:999px;
+    padding:12px 16px;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    background:rgba(255,255,255,.8);
+    border:1px solid var(--line);
+    transition:all .2s ease;
+  }
+
+  .tab.active{
+    background:linear-gradient(135deg, var(--navy), var(--plum));
+    border-color:transparent;
+    color:var(--white);
+  }
+
+  .sim-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .sim-grid{
+    display:grid;
+    grid-template-columns:1.08fr .92fr;
+    gap:18px;
+  }
+
+  .surface{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:18px;
+  }
+
+  .surface-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+  }
+
+  .surface-title h3{
+    margin:0;
+    font-size:18px;
+  }
+
+  .surface-title span{
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--muted);
+  }
+
+  .scenario-card{
+    padding:18px;
+    border-radius:20px;
+    background:linear-gradient(150deg, rgba(23,52,79,.06), rgba(255,255,255,.7));
+    border:1px solid rgba(23,52,79,.1);
+    margin-bottom:14px;
+  }
+
+  .scenario-card h4{
+    margin:0 0 8px;
+    font-size:22px;
+    line-height:1.15;
+    color:var(--navy);
+  }
+
+  .scenario-card p{
+    margin:0;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.65;
+  }
+
+  .scenario-tension{
+    margin-top:14px;
+    padding:14px 16px;
+    border-radius:18px;
+    background:rgba(23,52,79,.06);
+    border:1px solid rgba(23,52,79,.1);
+  }
+
+  .scenario-tension strong{
+    display:block;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--navy);
+    margin-bottom:6px;
+  }
+
+  .scenario-tension span{
+    display:block;
+    font-size:14px;
+    line-height:1.55;
+    color:var(--ink);
+  }
+
+  .constraint-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+    margin-top:14px;
+  }
+
+  .constraint{
+    padding:14px;
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+    border:1px solid var(--line);
+  }
+
+  .constraint strong{
+    display:block;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:6px;
+  }
+
+  .constraint span{
+    display:block;
+    font-size:13px;
+    line-height:1.5;
+    color:var(--muted);
+  }
+
+  .meter-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+    margin-top:14px;
+  }
+
+  .meter{
+    padding:14px;
+    border-radius:18px;
+    background:rgba(255,255,255,.74);
+    border:1px solid var(--line);
+  }
+
+  .meter-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:8px;
+  }
+
+  .meter-top strong{
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .meter-top span{
+    font-size:12px;
+    font-weight:900;
+    color:var(--ink);
+  }
+
+  .meter-track{
+    height:10px;
+    border-radius:999px;
+    background:rgba(27,26,23,.08);
+    overflow:hidden;
+    margin-bottom:8px;
+  }
+
+  .meter-fill{
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    transition:width .85s cubic-bezier(.2,.9,.2,1);
+  }
+
+  .meter-fill.teal{background:linear-gradient(90deg, var(--teal), #5ab1ab)}
+  .meter-fill.amber{background:linear-gradient(90deg, var(--amber), #deb16f)}
+  .meter-fill.crimson{background:linear-gradient(90deg, var(--crimson), #da8a7a)}
+  .meter-fill.plum{background:linear-gradient(90deg, var(--plum), #8a71a0)}
+
+  .meter p{
+    margin:0;
+    font-size:12px;
+    line-height:1.5;
+    color:var(--muted);
+  }
+
+  .role-notice{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+    margin-bottom:14px;
+  }
+
+  .role-box{
+    padding:14px;
+    border-radius:18px;
+    background:rgba(255,255,255,.72);
+    border:1px solid var(--line);
+  }
+
+  .role-box strong{
+    display:block;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+
+  .role-box.fixed strong{color:var(--teal)}
+  .role-box.swap strong{color:var(--amber)}
+
+  .role-box span{
+    display:block;
+    font-size:13px;
+    line-height:1.55;
+    color:var(--muted);
+  }
+
+  .agent-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:12px;
+    margin-top:16px;
+  }
+
+  .agent-card{
+    padding:16px;
+    border-radius:18px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.74);
+    transition:all .25s ease;
+    min-height:132px;
+  }
+
+  .agent-card.active{
+    transform:translateY(-2px);
+    border-color:rgba(15,118,110,.36);
+    box-shadow:0 12px 28px rgba(15,118,110,.12);
+  }
+
+  .agent-card.done{
+    border-color:rgba(23,52,79,.28);
+    background:linear-gradient(135deg, rgba(23,52,79,.06), rgba(255,255,255,.8));
+  }
+
+  .agent-top{
+    display:flex;
+    align-items:start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+  }
+
+  .agent-name{
+    font-size:15px;
+    font-weight:800;
+    margin:0;
+  }
+
+  .agent-role{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+
+  .pill{
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:900;
+    padding:7px 9px;
+    border-radius:999px;
+    background:rgba(15,118,110,.08);
+    color:var(--teal);
+    border:1px solid rgba(15,118,110,.14);
+    white-space:nowrap;
+  }
+
+  .agent-note{
+    font-size:13px;
+    line-height:1.55;
+    color:var(--muted);
+  }
+
+  .agent-state{
+    margin-top:12px;
+    font-size:12px;
+    color:var(--muted);
+    min-height:18px;
+  }
+
+  .agent-progress{
+    margin-top:10px;
+    height:8px;
+    border-radius:999px;
+    background:rgba(27,26,23,.08);
+    overflow:hidden;
+  }
+
+  .agent-progress span{
+    display:block;
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    background:linear-gradient(90deg, var(--teal), var(--navy));
+    transition:width .7s cubic-bezier(.2,.9,.2,1);
+  }
+
+  .right-stack{
+    display:grid;
+    gap:16px;
+  }
+
+  .debate-card{
+    margin-bottom:14px;
+    padding:16px;
+    border-radius:20px;
+    background:linear-gradient(145deg, rgba(255,255,255,.78), rgba(23,52,79,.05));
+    border:1px solid rgba(23,52,79,.1);
+  }
+
+  .debate-card strong{
+    display:block;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--crimson);
+    margin-bottom:8px;
+  }
+
+  .debate-card p{
+    margin:0;
+    font-size:14px;
+    line-height:1.6;
+    color:var(--muted);
+  }
+
+  .timeline{
+    display:grid;
+    gap:10px;
+  }
+
+  .timeline-step{
+    display:grid;
+    grid-template-columns:34px 1fr;
+    gap:10px;
+    align-items:start;
+    opacity:.58;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+
+  .timeline-step.live{
+    opacity:1;
+    transform:translateX(3px);
+  }
+
+  .timeline-bullet{
+    width:34px;
+    height:34px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    color:var(--white);
+    font-size:12px;
+    font-weight:900;
+    background:linear-gradient(135deg, var(--navy), var(--teal));
+  }
+
+  .timeline-copy{
+    padding:12px 14px;
+    border-radius:16px;
+    background:rgba(255,255,255,.7);
+    border:1px solid var(--line);
+    font-size:13px;
+    line-height:1.6;
+    color:var(--muted);
+  }
+
+  .timeline-copy strong{
+    display:block;
+    color:var(--ink);
+    margin-bottom:4px;
+  }
+
+  .decision-panel{
+    padding:18px;
+    border-radius:22px;
+    border:1px solid rgba(23,52,79,.14);
+    background:linear-gradient(165deg, rgba(23,52,79,.06), rgba(255,255,255,.82));
+  }
+
+  .decision-progress{
+    margin:0 0 14px;
+  }
+
+  .decision-progress-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:8px;
+  }
+
+  .decision-progress-top span{
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .decision-progress-top b{
+    font-size:12px;
+    color:var(--navy);
+  }
+
+  .decision-bar{
+    height:10px;
+    border-radius:999px;
+    background:rgba(27,26,23,.08);
+    overflow:hidden;
+  }
+
+  .decision-bar span{
+    display:block;
+    width:0%;
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, var(--amber), var(--teal), var(--navy));
+    transition:width .9s cubic-bezier(.2,.9,.2,1);
+  }
+
+  .decision-status{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+
+  .decision-status strong{
+    font-size:26px;
+    line-height:1;
+    color:var(--navy);
+  }
+
+  .decision-chip{
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:900;
+    border:1px solid rgba(15,118,110,.16);
+    color:var(--teal);
+    background:rgba(15,118,110,.08);
+  }
+
+  .decision-panel p{
+    margin:0 0 14px;
+    font-size:14px;
+    line-height:1.65;
+    color:var(--muted);
+  }
+
+  .score-row{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+  }
+
+  .score{
+    padding:12px;
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+    border:1px solid var(--line);
+  }
+
+  .score .label{
+    display:block;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+
+  .score .value{
+    font-size:22px;
+    font-weight:900;
+    color:var(--ink);
+  }
+
+  .audit-log{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:10px;
+    max-height:360px;
+    overflow:auto;
+  }
+
+  .audit-log li{
+    display:grid;
+    grid-template-columns:70px 1fr;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px dashed var(--line);
+    opacity:.38;
+    transform:translateY(4px);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+
+  .audit-log li:last-child{border-bottom:none}
+
+  .audit-log li.live{
+    opacity:1;
+    transform:none;
+  }
+
+  .audit-time{
+    font-size:11px;
+    font-weight:900;
+    color:var(--amber);
+    letter-spacing:.08em;
+  }
+
+  .audit-body strong{
+    display:block;
+    font-size:13px;
+    margin-bottom:4px;
+  }
+
+  .audit-body span{
+    display:block;
+    font-size:13px;
+    line-height:1.55;
+    color:var(--muted);
+  }
+
+  .architecture{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:22px;
+  }
+
+  .swimlane{
+    padding:22px;
+    border-radius:26px;
+    background:rgba(255,255,255,.62);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+  }
+
+  .lane{
+    display:grid;
+    grid-template-columns:160px 1fr;
+    gap:14px;
+    align-items:start;
+    padding:16px 0;
+    border-bottom:1px dashed var(--line);
+  }
+
+  .lane:last-child{border-bottom:none}
+
+  .lane-label{
+    padding:12px 14px;
+    border-radius:18px;
+    background:var(--paper);
+    border:1px solid var(--line);
+  }
+
+  .lane-label strong{
+    display:block;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:6px;
+    color:var(--navy);
+  }
+
+  .lane-label span{
+    font-size:12px;
+    line-height:1.55;
+    color:var(--muted);
+  }
+
+  .lane-items{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .mini{
+    min-width:150px;
+    padding:14px 14px 12px;
+    border-radius:18px;
+    background:rgba(255,255,255,.72);
+    border:1px solid var(--line);
+  }
+
+  .mini strong{
+    display:block;
+    font-size:14px;
+    margin-bottom:4px;
+  }
+
+  .mini span{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:18px;
+  }
+
+  .compare{
+    padding:22px;
+    border-radius:24px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.58);
+  }
+
+  .compare .label{
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+
+  .compare.bad .label{color:var(--crimson)}
+  .compare.good .label{color:var(--teal)}
+
+  .compare h3{
+    margin:0 0 10px;
+    font-size:24px;
+  }
+
+  .compare p{
+    margin:0;
+    font-size:14px;
+    line-height:1.7;
+    color:var(--muted);
+  }
+
+  .footer{
+    padding:28px 0 48px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(16px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+
+  .reveal.in{
+    opacity:1;
+    transform:none;
+  }
+
+  @media (max-width: 1080px){
+    .hero-grid,.quick-grid,.split,.deep-head,.sim-grid,.architecture,.grid-2{grid-template-columns:1fr}
+    .quote-panel{position:relative; top:auto}
+  }
+
+  @media (max-width: 820px){
+    .cards-3,.hero-metrics,.sim-reading,.agent-grid,.constraint-grid,.meter-grid,.role-notice,.score-row{grid-template-columns:1fr}
+    .quick-bottom{grid-template-columns:1fr}
+    .topbar-inner,.section-head,.sim-top{align-items:flex-start}
+    .lane{grid-template-columns:1fr}
+    .hero-panel{min-height:auto}
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">DS</div>
+        <div>
+          <div>Decision Swarm OS</div>
+          <div style="font-weight:600; letter-spacing:.03em; text-transform:none; color:var(--muted);">Transparent judgment under constraints</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#quick-view">Quick View</a>
+        <a href="#deep-dive">Deep Dive</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="quick-view" class="hero">
+      <div class="hero-grid">
+        <div class="reveal">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Codex Hackathon Narrative</div>
+          <h1>When <span class="accent">rules break</span>,<br>judgment has to <span class="accent">show its work</span>.</h1>
+          <p class="hero-copy">
+            This is a transparent decision operating system for hard calls made under uncertainty, conflicting signals,
+            business constraints, and governance pressure. Underwriting is the first proof point, not the whole idea.
+            The same decision spine can also run pricing and product decisions by changing the specialist agent roles.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#deep-dive">Open Deep Dive</a>
+            <a class="btn btn-secondary" href="#simulator">Jump To Live Explainer</a>
+          </div>
+          <div class="hero-metrics">
+            <div class="metric">
+              <strong>Input</strong>
+              <span>Messy, high-stakes decisions with constraints, uncertainty, and conflicting evidence.</span>
+            </div>
+            <div class="metric">
+              <strong>Engine</strong>
+              <span>Specialist agents debate, a lead reconciles conflict, and a governor makes the accountable call.</span>
+            </div>
+            <div class="metric">
+              <strong>Output</strong>
+              <span>A transparent, auditable decision trail instead of a rigid rule result or black-box answer.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-panel reveal">
+          <div class="panel-label">60-Second Decode</div>
+          <div class="decision-spine">
+            <div class="spine-line"></div>
+            <div class="spine-node">
+              <div class="spine-dot">1</div>
+              <div class="spine-card">
+                <h3>Messy decision comes in</h3>
+                <p>The system receives a case with tradeoffs, uncertainty, and pressure that simple rules cannot resolve cleanly.</p>
+              </div>
+            </div>
+            <div class="spine-node">
+              <div class="spine-dot">2</div>
+              <div class="spine-card">
+                <h3>Specialists disagree openly</h3>
+                <p>Each agent looks through a different lens, so conflict becomes visible rather than hidden inside one answer.</p>
+              </div>
+            </div>
+            <div class="spine-node">
+              <div class="spine-dot">3</div>
+              <div class="spine-card">
+                <h3>Lead reframes the tradeoff</h3>
+                <p>The system forces an explicit reconciliation between business upside, risk, policy, and uncertainty.</p>
+              </div>
+            </div>
+            <div class="spine-node">
+              <div class="spine-dot">4</div>
+              <div class="spine-card">
+                <h3>Governor logs the call</h3>
+                <p>The final answer is accountable, explainable, and audit-ready, with rationale, dissent, and override notes preserved.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-shell reveal">
+        <div class="quick-grid">
+          <div class="quick-pitch">
+            <span class="quick-kicker">The fast explanation</span>
+            <h3>We operationalize hard judgment, not easy automation.</h3>
+            <p>
+              When rules are too rigid and generic AI is too opaque, Decision Swarm OS breaks one difficult decision into
+              specialist viewpoints, preserves disagreement, and forces an accountable final call with a clear audit trail.
+            </p>
+          </div>
+          <div class="quick-stack">
+            <article class="quick-card">
+              <strong>What It Is</strong>
+              <h4>A reusable decision layer</h4>
+              <p>One stable architecture for cases where tradeoffs have to be made under pressure and uncertainty.</p>
+            </article>
+            <article class="quick-card">
+              <strong>Why It Matters</strong>
+              <h4>Trust survives the hard cases</h4>
+              <p>The system shows who argued what, why a tradeoff was accepted, and how the final decision was justified.</p>
+            </article>
+            <article class="quick-card">
+              <strong>Why It Scales</strong>
+              <h4>The soul changes, the spine stays</h4>
+              <p>Underwriting, pricing, and product can all run on the same decision logic by swapping specialist roles.</p>
+            </article>
+          </div>
+        </div>
+        <div class="quick-bottom">
+          <div class="domain-strip">
+            <div class="domain-chip">Underwriting</div>
+            <div class="domain-chip">Pricing</div>
+            <div class="domain-chip">Product</div>
+          </div>
+          <div class="quick-note">
+            <strong>One-liner:</strong> a transparent decision operating system for cases where rules are not enough and black-box AI is not defensible.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="deep-dive" class="deep-dive">
+      <div class="deep-head reveal">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Second Half</div>
+          <h2>Deep dive for the next one to two minutes.</h2>
+        </div>
+        <p>
+          Everything below expands the quick story: the problem we solve, how the live explainer works, why the
+          architecture is reusable, and why this framing is bigger than just underwriting.
+        </p>
+      </div>
+
+      <section id="thesis">
+        <div class="section-head reveal">
+          <h2>What problem are we actually solving?</h2>
+          <p>
+            Difficult decisions are not the ones where everyone agrees. They are the ones where information is incomplete,
+            incentives are misaligned, rules collide, and someone still has to act. That is where trust in the system usually breaks.
+          </p>
+        </div>
+        <div class="cards-3">
+          <article class="story-card reveal">
+            <div class="kicker">Traditional Rules</div>
+            <h3>Rigid systems crack under conflict.</h3>
+            <p>
+              Rule engines work well for clear policy checks, but they struggle when signals point in opposite directions or when business context matters.
+            </p>
+          </article>
+          <article class="story-card reveal">
+            <div class="kicker">Generic AI</div>
+            <h3>Black-box answers are hard to defend.</h3>
+            <p>
+              A single model can produce a recommendation, but it often hides tradeoffs, fails to expose dissent, and leaves weak auditability for high-stakes decisions.
+            </p>
+          </article>
+          <article class="story-card reveal">
+            <div class="kicker">Decision Swarm OS</div>
+            <h3>Structured judgment becomes visible and reusable.</h3>
+            <p>
+              Our system decomposes a hard decision into specialist viewpoints, reconciles disagreement, and records the full decision path in a transparent ledger.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="split">
+          <div class="principles">
+            <article class="principle reveal">
+              <div class="principle-icon">01</div>
+              <div>
+                <h3>Constraint-aware by design</h3>
+                <p>Every decision is shaped by real operating limits: policy, risk appetite, margin floor, portfolio exposure, customer promise, or engineering capacity.</p>
+              </div>
+            </article>
+            <article class="principle reveal">
+              <div class="principle-icon">02</div>
+              <div>
+                <h3>Uncertainty is first-class input</h3>
+                <p>Instead of pretending data is complete, the system flags confidence gaps and allows the final authority to conditionally approve or request more evidence.</p>
+              </div>
+            </article>
+            <article class="principle reveal">
+              <div class="principle-icon">03</div>
+              <div>
+                <h3>Dissent is preserved, not flattened</h3>
+                <p>Judges and operators can see exactly where agents disagree and why one viewpoint won, which makes the system teachable and governable.</p>
+              </div>
+            </article>
+          </div>
+
+          <aside class="quote-panel reveal">
+            <div class="label">Judge-ready framing</div>
+            <blockquote>We are not automating easy calls. We are operationalizing hard judgment.</blockquote>
+            <p>
+              Underwriting is just the first proof point. The real product is a transparent decision-making layer
+              that can sit on top of any workflow where constraints, uncertainty, and accountability matter.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="simulator">
+      <div class="section-head reveal">
+        <h2>Live decision explainer</h2>
+        <p>
+          Same operating system, different domain souls. Pick a use case and watch how specialist agents, a lead,
+          and a final governor navigate conflict, uncertainty, and constraints.
+        </p>
+      </div>
+
+      <div class="sim-shell reveal">
+        <div class="sim-top">
+          <div class="tabs" id="tabs"></div>
+          <div class="sim-actions">
+            <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+            <button class="btn btn-primary" id="runBtn" type="button">Run Scenario</button>
+          </div>
+        </div>
+
+        <div class="sim-reading">
+          <div class="reading-card">
+            <strong>1. Read the pressure</strong>
+            <span>The scenario starts with conflicting signals, explicit constraints, and uncertainty that cannot be ignored.</span>
+          </div>
+          <div class="reading-card">
+            <strong>2. Watch the debate</strong>
+            <span>Specialist agents do not collapse into one answer. They expose tension, and the lead reframes the real tradeoff.</span>
+          </div>
+          <div class="reading-card">
+            <strong>3. Inspect the call</strong>
+            <span>The governor makes a visible, accountable decision with confidence, fit to constraints, and audit trace.</span>
+          </div>
+        </div>
+
+        <div class="sim-grid">
+          <div class="surface">
+            <div class="surface-title">
+              <h3 id="scenarioTitle">Scenario</h3>
+              <span id="scenarioLabel">Domain</span>
+            </div>
+
+            <div class="scenario-card">
+              <h4 id="scenarioHeadline"></h4>
+              <p id="scenarioSummary"></p>
+              <div class="scenario-tension">
+                <strong>Core tension</strong>
+                <span id="scenarioTension"></span>
+              </div>
+              <div class="constraint-grid" id="constraintGrid"></div>
+              <div class="meter-grid" id="meterGrid"></div>
+            </div>
+
+            <div class="surface-title">
+              <h3>Agent roles</h3>
+              <span>Soul changes here</span>
+            </div>
+            <div class="role-notice">
+              <div class="role-box fixed">
+                <strong>What stays fixed</strong>
+                <span id="fixedCore"></span>
+              </div>
+              <div class="role-box swap">
+                <strong>What changes by domain</strong>
+                <span id="roleSwap"></span>
+              </div>
+            </div>
+            <div class="agent-grid" id="agentGrid"></div>
+          </div>
+
+          <div class="right-stack">
+            <div class="surface">
+              <div class="surface-title">
+                <h3>Decision flow</h3>
+                <span>Conflict stays visible</span>
+              </div>
+              <div class="debate-card">
+                <strong>What the lead is resolving</strong>
+                <p id="debateText"></p>
+              </div>
+              <div class="timeline" id="timeline"></div>
+            </div>
+
+            <div class="surface">
+              <div class="surface-title">
+                <h3>Final decision</h3>
+                <span>Accountable output</span>
+              </div>
+              <div class="decision-panel">
+                <div class="decision-progress">
+                  <div class="decision-progress-top">
+                    <span>Decision progress</span>
+                    <b id="progressLabel">Idle</b>
+                  </div>
+                  <div class="decision-bar"><span id="decisionBar"></span></div>
+                </div>
+                <div class="decision-status">
+                  <strong id="verdictTitle">Awaiting run</strong>
+                  <div class="decision-chip" id="verdictChip">Idle</div>
+                </div>
+                <p id="verdictText">Run the scenario to see how the system explains, escalates, and logs a hard decision.</p>
+                <div class="score-row">
+                  <div class="score">
+                    <span class="label">Confidence</span>
+                    <span class="value" id="scoreConfidence">--</span>
+                  </div>
+                  <div class="score">
+                    <span class="label">Constraint Fit</span>
+                    <span class="value" id="scoreConstraint">--</span>
+                  </div>
+                  <div class="score">
+                    <span class="label">Audit Strength</span>
+                    <span class="value" id="scoreAudit">--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="surface">
+              <div class="surface-title">
+                <h3>Audit ledger</h3>
+                <span>Every step leaves a trace</span>
+              </div>
+              <ul class="audit-log" id="auditLog"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      </section>
+
+      <section id="architecture">
+      <div class="section-head reveal">
+        <h2>The reusable architecture</h2>
+        <p>
+          The core move is simple: keep the operating spine stable, then swap specialist personas based on the domain.
+          That is how one product becomes many applications without becoming vague.
+        </p>
+      </div>
+
+      <div class="architecture">
+        <div class="swimlane reveal">
+          <div class="lane">
+            <div class="lane-label">
+              <strong>Layer 1</strong>
+              <span>Specialist agents</span>
+            </div>
+            <div class="lane-items">
+              <div class="mini"><strong>Evidence agent</strong><span>collects domain facts and uncertainty flags</span></div>
+              <div class="mini"><strong>Constraint agent</strong><span>enforces hard policies and operating boundaries</span></div>
+              <div class="mini"><strong>Tradeoff agent</strong><span>models upside, downside, and second-order impact</span></div>
+              <div class="mini"><strong>Explainability agent</strong><span>turns raw signals into defensible rationale</span></div>
+            </div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">
+              <strong>Layer 2</strong>
+              <span>Lead reviewer</span>
+            </div>
+            <div class="lane-items">
+              <div class="mini"><strong>Conflict reconciler</strong><span>detects disagreement, requests clarification, and frames the real tension</span></div>
+            </div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">
+              <strong>Layer 3</strong>
+              <span>Final governor</span>
+            </div>
+            <div class="lane-items">
+              <div class="mini"><strong>Accountable decider</strong><span>approves, rejects, or conditionally approves with override notes and final reasoning</span></div>
+            </div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">
+              <strong>Cross-cutting</strong>
+              <span>Governance rails</span>
+            </div>
+            <div class="lane-items">
+              <div class="mini"><strong>Audit ledger</strong><span>time-stamped evidence, dissent, overrides, and final output</span></div>
+              <div class="mini"><strong>Evals</strong><span>decision quality, consistency, false positives, misses, drift, and weak-link analysis</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="principles">
+          <article class="principle reveal">
+            <div class="principle-icon">A</div>
+            <div>
+              <h3>Underwriting</h3>
+              <p>Swap in bureau, business, portfolio, policy, and pricing specialists. The system handles borderline credit cases with an explainable final call.</p>
+            </div>
+          </article>
+          <article class="principle reveal">
+            <div class="principle-icon">B</div>
+            <div>
+              <h3>Pricing</h3>
+              <p>Swap in elasticity, margin, competitive context, and retention specialists. The same spine now makes disciplined pricing decisions under uncertainty.</p>
+            </div>
+          </article>
+          <article class="principle reveal">
+            <div class="principle-icon">C</div>
+            <div>
+              <h3>Product</h3>
+              <p>Swap in customer signal, revenue impact, delivery feasibility, and risk/compliance specialists. The engine becomes a product decision council with memory.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      </section>
+
+      <section id="compare">
+      <div class="section-head reveal">
+        <h2>Why this framing is stronger</h2>
+        <p>
+          It lets you show a real use case without shrinking the idea. Judges get a concrete domain proof point and a platform-level story at the same time.
+        </p>
+      </div>
+      <div class="grid-2">
+        <article class="compare bad reveal">
+          <div class="label">Too narrow</div>
+          <h3>“This is an underwriting swarm.”</h3>
+          <p>
+            That sounds like one workflow demo. It risks making the idea feel like a specialized automation layer instead of a broader decisioning primitive.
+          </p>
+        </article>
+        <article class="compare good reveal">
+          <div class="label">Stronger framing</div>
+          <h3>“This is a transparent decision operating system.”</h3>
+          <p>
+            Underwriting becomes the first compelling proof that the system can navigate hard calls under constraints and uncertainty while leaving an auditable trail.
+          </p>
+        </article>
+      </div>
+      </section>
+    </section>
+
+    <div class="footer">
+      Decision Swarm OS: a reusable architecture for difficult decisions with visible reasoning, governed escalation, and transparent auditability.
+    </div>
+  </main>
+
+  <script>
+    const scenarios = {
+      underwriting: {
+        name: "Underwriting",
+        headline: "Approve a borderline distributor without losing governance",
+        summary: "The applicant has strong revenue momentum and a credible anchor relationship, but repayment behavior is noisy and exposure concentration is rising. The decision cannot be a blind yes or no.",
+        tension: "Growth wants to move fast, risk wants discipline, and the data is good enough to tempt approval but not clean enough to skip judgment.",
+        fixed: "The operating spine remains evidence, constraint checking, conflict reconciliation, governed escalation, and logged reasoning.",
+        swap: "Finance, business quality, policy, and portfolio agents replace the generic specialist set for this credit-specific decision.",
+        meters: [
+          ["Uncertainty", 68, "amber", "Cash-flow confidence is partial, so the system cannot present certainty it does not have."],
+          ["Conflict", 84, "crimson", "Business momentum and risk warnings pull the decision in opposite directions."],
+          ["Business pressure", 77, "plum", "Commercial urgency is high, which raises the need for disciplined explanation."],
+          ["Reversibility", 41, "teal", "A poor credit call is expensive to unwind, so guardrails matter."],
+        ],
+        constraints: [
+          ["Signals in conflict", "Business strength is improving, but repayment quality and concentration risk are flashing caution."],
+          ["Hard boundary", "Policy allows an exception only if rationale is explicit and price/tenure are adjusted."],
+          ["Uncertainty", "Cash flow stability is inferred from partial records, not complete clean books."],
+          ["Business pressure", "Sales wants growth this quarter, risk wants tighter discipline in this segment."]
+        ],
+        agents: [
+          {name: "Financial Signal Agent", role: "Reads repayment texture, leverage, and stress pockets.", note: "Flags mild stress and asks whether volatility is cyclical or structural."},
+          {name: "Business Quality Agent", role: "Measures revenue strength, vintage, and anchor quality.", note: "Argues the business is stronger than raw bureau behavior suggests."},
+          {name: "Policy Guardrail Agent", role: "Checks eligibility, exceptions, and mandatory controls.", note: "Allows a conditional structure, but not a clean policy pass."},
+          {name: "Portfolio Exposure Agent", role: "Looks at concentration, vintage mix, and portfolio spillover.", note: "Warns that one more clean approval increases segment clustering."}
+        ],
+        flow: [
+          ["1", "Specialists fan out", "Four agents inspect the case through finance, business, policy, and exposure lenses."],
+          ["2", "Conflict is surfaced", "Business quality supports approval, but exposure and payment volatility create hesitation."],
+          ["3", "Lead frames the tradeoff", "The lead suggests a conditional approval with tighter tenure and pricing instead of a binary answer."],
+          ["4", "Governor makes final call", "The final decider approves with guardrails and records why this exception is acceptable today."]
+        ],
+        verdict: {
+          title: "Conditional approve",
+          chip: "Governed exception",
+          text: "Decision: approve with lower tenure, slightly higher pricing, and an exposure note. The system accepts upside, contains downside, and leaves a clear rationale for audit and future review.",
+          confidence: "82%",
+          constraint: "High",
+          audit: "Strong"
+        },
+        audit: [
+          ["09:14:03", "Case opened", "Borderline credit case classified as conflict-heavy due to mixed repayment and business signals."],
+          ["09:14:11", "Dissent recorded", "Business Quality Agent supports approve; Portfolio Exposure Agent recommends caution."],
+          ["09:14:18", "Lead intervention", "Lead rejects binary outcome and proposes conditional approval structure."],
+          ["09:14:26", "Final decision", "Governor approves with tenure reduction, risk-priced terms, and rationale logged as policy exception."]
+        ]
+      },
+      pricing: {
+        name: "Pricing",
+        headline: "Raise price without breaking margin discipline or customer trust",
+        summary: "The market can likely absorb a moderate price move, but churn risk is uneven across customer cohorts and current profitability is already under pressure. A single average answer is dangerous.",
+        tension: "Finance wants margin recovery, sales wants retention protection, and the right answer depends on where pricing power is real versus assumed.",
+        fixed: "The same spine still handles evidence, guardrails, dissent, lead reconciliation, and accountable final reasoning.",
+        swap: "Elasticity, margin, retention, and market context agents become the specialist voices for the pricing version of the system.",
+        meters: [
+          ["Uncertainty", 57, "amber", "Competitor context and future churn behavior are directionally clear but not fully known."],
+          ["Conflict", 79, "crimson", "Margin and retention goals are structurally opposed if you use one blunt answer."],
+          ["Business pressure", 82, "plum", "Leadership wants a quick move, which creates risk of oversimplification."],
+          ["Reversibility", 63, "teal", "A pricing move can be softened later, but trust damage is harder to reverse."],
+        ],
+        constraints: [
+          ["Signals in conflict", "Elasticity looks favorable overall, but high-value customers show higher exit risk."],
+          ["Hard boundary", "Gross margin floor cannot drop below target after discounting and support costs."],
+          ["Uncertainty", "Recent competitor moves are incomplete and partially anecdotal."],
+          ["Business pressure", "Finance wants margin recovery, sales wants retention protection, leadership wants speed."]
+        ],
+        agents: [
+          {name: "Elasticity Agent", role: "Models willingness to pay by segment and usage profile.", note: "Supports a selective increase, not a flat-book increase."},
+          {name: "Margin Guardrail Agent", role: "Protects contribution margin and floor economics.", note: "Says current pricing is under-monetizing premium cohorts."},
+          {name: "Retention Risk Agent", role: "Estimates churn sensitivity for strategic accounts.", note: "Pushes back on aggressive changes for relationship-sensitive customers."},
+          {name: "Market Context Agent", role: "Reads competitor signals, value perception, and timing risk.", note: "Finds room for movement if messaging is framed around added value."}
+        ],
+        flow: [
+          ["1", "Signals are separated", "The system avoids one blended average and models different customer realities."],
+          ["2", "Tradeoff becomes explicit", "Margin upside is strong, but premium accounts need softer handling."],
+          ["3", "Lead proposes structure", "Instead of one price change, the lead suggests segmented pricing with protected strategic accounts."],
+          ["4", "Governor makes final call", "The final decision preserves margin discipline while preventing avoidable churn."]
+        ],
+        verdict: {
+          title: "Segmented price increase",
+          chip: "Tradeoff optimized",
+          text: "Decision: increase prices for low-risk, low-sensitivity segments while holding or cushioning strategic accounts. The log clearly shows why the system avoided a one-size-fits-all answer.",
+          confidence: "79%",
+          constraint: "Very high",
+          audit: "Strong"
+        },
+        audit: [
+          ["11:02:07", "Decision opened", "Pricing case labeled as margin-vs-retention conflict with incomplete competitor data."],
+          ["11:02:15", "Agent disagreement", "Margin Guardrail Agent recommends a broad increase; Retention Risk Agent pushes for cohort protection."],
+          ["11:02:22", "Lead resolution", "Lead proposes segmented action plan instead of a flat price move."],
+          ["11:02:31", "Final decision", "Governor approves selective increase with protected enterprise cohort and review checkpoint logged."]
+        ]
+      },
+      product: {
+        name: "Product",
+        headline: "Ship a feature now or hold it until risk and ops catch up",
+        summary: "Customer demand is real, revenue upside is attractive, and a flagship client wants a commitment. But operational complexity and governance readiness are still shaky. Speed and caution are in tension.",
+        tension: "Revenue and customer pull reward speed, but trust and operational readiness punish a launch that outruns the organization.",
+        fixed: "The architecture still separates evidence from pressure, preserves dissent, and forces an auditable final call.",
+        swap: "Customer signal, revenue impact, delivery feasibility, and trust/compliance agents define the product decision soul.",
+        meters: [
+          ["Uncertainty", 72, "amber", "Effort, support burden, and real launch readiness still have wide confidence bands."],
+          ["Conflict", 76, "crimson", "The opportunity is real, but so is the cost of shipping too broadly too soon."],
+          ["Business pressure", 88, "plum", "Customer commitment pressure is high, which can distort good product judgment."],
+          ["Reversibility", 38, "teal", "A trust-breaking launch is much harder to undo than a delayed beta."],
+        ],
+        constraints: [
+          ["Signals in conflict", "Customer pull is high, but delivery confidence and risk readiness are both uneven."],
+          ["Hard boundary", "Launch cannot violate compliance, trust, or reliability thresholds for existing customers."],
+          ["Uncertainty", "Effort estimates still have wide variance and downstream support burden is not fully known."],
+          ["Business pressure", "Sales wants the roadmap signal now, product wants a strategic bet, engineering wants quality protection."]
+        ],
+        agents: [
+          {name: "Customer Signal Agent", role: "Measures demand intensity, strategic pull, and user pain.", note: "Argues the feature is important and time-sensitive."},
+          {name: "Revenue Impact Agent", role: "Estimates expansion potential and commercial leverage.", note: "Sees strong upside if the right customers get it early."},
+          {name: "Delivery Feasibility Agent", role: "Evaluates engineering risk, sequencing, and reliability implications.", note: "Warns that the current scope is too large for a safe broad launch."},
+          {name: "Trust and Compliance Agent", role: "Checks policy, data handling, and reputational downside.", note: "Allows a limited beta but rejects a universal release now."}
+        ],
+        flow: [
+          ["1", "Specialists map the landscape", "Demand, revenue, delivery, and trust are evaluated as separate but linked forces."],
+          ["2", "Uncertainty is named", "The system distinguishes between strong strategic pull and weak execution certainty."],
+          ["3", "Lead narrows the path", "Lead recommends a staged beta with a strict customer cohort and learning milestones."],
+          ["4", "Governor makes final call", "The decision preserves strategic momentum without pretending the organization is ready for a full launch."]
+        ],
+        verdict: {
+          title: "Stage-gated beta",
+          chip: "Speed with control",
+          text: "Decision: launch to a narrow cohort with explicit operational and trust checkpoints. The system does not kill momentum, but it refuses to hide readiness risk behind optimism.",
+          confidence: "76%",
+          constraint: "High",
+          audit: "Very strong"
+        },
+        audit: [
+          ["14:36:42", "Decision opened", "Feature request tagged as high-opportunity and high-uncertainty."],
+          ["14:36:50", "Conflict surfaced", "Customer Signal Agent and Revenue Impact Agent support acceleration; Delivery Feasibility Agent opposes broad launch."],
+          ["14:36:57", "Lead intervention", "Lead reframes decision from ship-vs-don't-ship to staged beta with controlled blast radius."],
+          ["14:37:05", "Final decision", "Governor approves gated beta with launch conditions, cohort definition, and post-launch review criteria."]
+        ]
+      }
+    };
+
+    const tabsEl = document.getElementById("tabs");
+    const agentGrid = document.getElementById("agentGrid");
+    const constraintGrid = document.getElementById("constraintGrid");
+    const meterGrid = document.getElementById("meterGrid");
+    const timelineEl = document.getElementById("timeline");
+    const auditLog = document.getElementById("auditLog");
+    const scenarioLabel = document.getElementById("scenarioLabel");
+    const scenarioHeadline = document.getElementById("scenarioHeadline");
+    const scenarioSummary = document.getElementById("scenarioSummary");
+    const scenarioTitle = document.getElementById("scenarioTitle");
+    const scenarioTension = document.getElementById("scenarioTension");
+    const fixedCore = document.getElementById("fixedCore");
+    const roleSwap = document.getElementById("roleSwap");
+    const debateText = document.getElementById("debateText");
+    const verdictTitle = document.getElementById("verdictTitle");
+    const verdictChip = document.getElementById("verdictChip");
+    const verdictText = document.getElementById("verdictText");
+    const scoreConfidence = document.getElementById("scoreConfidence");
+    const scoreConstraint = document.getElementById("scoreConstraint");
+    const scoreAudit = document.getElementById("scoreAudit");
+    const progressLabel = document.getElementById("progressLabel");
+    const decisionBar = document.getElementById("decisionBar");
+    const runBtn = document.getElementById("runBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let currentKey = "underwriting";
+    let timeouts = [];
+
+    function clearTimers(){
+      timeouts.forEach(clearTimeout);
+      timeouts = [];
+    }
+
+    function makeTabs(){
+      tabsEl.innerHTML = "";
+      Object.keys(scenarios).forEach((key) => {
+        const button = document.createElement("button");
+        button.className = "tab" + (key === currentKey ? " active" : "");
+        button.type = "button";
+        button.textContent = scenarios[key].name;
+        button.addEventListener("click", () => {
+          currentKey = key;
+          renderScenario();
+        });
+        tabsEl.appendChild(button);
+      });
+    }
+
+    function renderScenario(){
+      clearTimers();
+      makeTabs();
+      const scenario = scenarios[currentKey];
+
+      scenarioTitle.textContent = scenario.name + " scenario";
+      scenarioLabel.textContent = scenario.name;
+      scenarioHeadline.textContent = scenario.headline;
+      scenarioSummary.textContent = scenario.summary;
+      scenarioTension.textContent = scenario.tension;
+      fixedCore.textContent = scenario.fixed;
+      roleSwap.textContent = scenario.swap;
+      debateText.textContent = scenario.tension;
+
+      constraintGrid.innerHTML = scenario.constraints.map(([title, body]) => `
+        <div class="constraint">
+          <strong>${title}</strong>
+          <span>${body}</span>
+        </div>
+      `).join("");
+
+      meterGrid.innerHTML = scenario.meters.map(([label, value, tone, detail]) => `
+        <div class="meter">
+          <div class="meter-top">
+            <strong>${label}</strong>
+            <span>${value}%</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill ${tone}" data-target="${value}"></div></div>
+          <p>${detail}</p>
+        </div>
+      `).join("");
+
+      agentGrid.innerHTML = scenario.agents.map((agent, index) => `
+        <article class="agent-card" data-agent-index="${index}">
+          <div class="agent-top">
+            <div>
+              <h4 class="agent-name">${agent.name}</h4>
+              <div class="agent-role">${agent.role}</div>
+            </div>
+            <div class="pill">Ready</div>
+          </div>
+          <div class="agent-note">${agent.note}</div>
+          <div class="agent-state">Waiting for signal</div>
+          <div class="agent-progress"><span></span></div>
+        </article>
+      `).join("");
+
+      timelineEl.innerHTML = scenario.flow.map(([n, title, body]) => `
+        <div class="timeline-step">
+          <div class="timeline-bullet">${n}</div>
+          <div class="timeline-copy">
+            <strong>${title}</strong>
+            <span>${body}</span>
+          </div>
+        </div>
+      `).join("");
+
+      auditLog.innerHTML = scenario.audit.map(([time, title, body]) => `
+        <li>
+          <div class="audit-time">${time}</div>
+          <div class="audit-body">
+            <strong>${title}</strong>
+            <span>${body}</span>
+          </div>
+        </li>
+      `).join("");
+
+      resetDecision();
+    }
+
+    function resetDecision(){
+      verdictTitle.textContent = "Awaiting run";
+      verdictChip.textContent = "Idle";
+      verdictText.textContent = "Run the scenario to see how the system explains, escalates, and logs a hard decision.";
+      scoreConfidence.textContent = "--";
+      scoreConstraint.textContent = "--";
+      scoreAudit.textContent = "--";
+      progressLabel.textContent = "Idle";
+      decisionBar.style.width = "0%";
+
+      document.querySelectorAll(".meter-fill").forEach((fill) => {
+        fill.style.width = "0%";
+      });
+
+      document.querySelectorAll(".agent-card").forEach((card) => {
+        card.classList.remove("active", "done");
+        const pill = card.querySelector(".pill");
+        if (pill) pill.textContent = "Ready";
+        const state = card.querySelector(".agent-state");
+        if (state) state.textContent = "Waiting for signal";
+        const progress = card.querySelector(".agent-progress span");
+        if (progress) progress.style.width = "0%";
+      });
+
+      document.querySelectorAll(".timeline-step").forEach((step) => step.classList.remove("live"));
+      document.querySelectorAll(".audit-log li").forEach((row) => row.classList.remove("live"));
+    }
+
+    function runScenario(){
+      clearTimers();
+      resetDecision();
+
+      const scenario = scenarios[currentKey];
+      const agentCards = [...document.querySelectorAll(".agent-card")];
+      const steps = [...document.querySelectorAll(".timeline-step")];
+      const audits = [...document.querySelectorAll(".audit-log li")];
+      const meterFills = [...document.querySelectorAll(".meter-fill")];
+
+      verdictTitle.textContent = "Running";
+      verdictChip.textContent = "Live";
+      verdictText.textContent = "Specialists are evaluating the case and surfacing disagreement.";
+      progressLabel.textContent = "Scanning evidence";
+      decisionBar.style.width = "14%";
+
+      timeouts.push(setTimeout(() => {
+        meterFills.forEach((fill) => {
+          fill.style.width = `${fill.dataset.target}%`;
+        });
+      }, 100));
+
+      agentCards.forEach((card, index) => {
+        timeouts.push(setTimeout(() => {
+          card.classList.add("active");
+          const pill = card.querySelector(".pill");
+          if (pill) pill.textContent = "Analyzing";
+          const state = card.querySelector(".agent-state");
+          if (state) state.textContent = "Pulling evidence and framing position";
+          const progress = card.querySelector(".agent-progress span");
+          if (progress) progress.style.width = "62%";
+        }, 240 * index));
+
+        timeouts.push(setTimeout(() => {
+          card.classList.remove("active");
+          card.classList.add("done");
+          const pill = card.querySelector(".pill");
+          if (pill) pill.textContent = "Logged";
+          const state = card.querySelector(".agent-state");
+          if (state) state.textContent = "Position recorded for lead review";
+          const progress = card.querySelector(".agent-progress span");
+          if (progress) progress.style.width = "100%";
+        }, 950 + 230 * index));
+      });
+
+      steps.forEach((step, index) => {
+        timeouts.push(setTimeout(() => {
+          steps.forEach((s) => s.classList.remove("live"));
+          step.classList.add("live");
+          progressLabel.textContent = step.querySelector("strong").textContent;
+          decisionBar.style.width = `${28 + (index * 18)}%`;
+        }, 500 + 820 * index));
+      });
+
+      audits.forEach((row, index) => {
+        timeouts.push(setTimeout(() => {
+          row.classList.add("live");
+        }, 720 + 620 * index));
+      });
+
+      timeouts.push(setTimeout(() => {
+        verdictTitle.textContent = scenario.verdict.title;
+        verdictChip.textContent = scenario.verdict.chip;
+        verdictText.textContent = scenario.verdict.text;
+        scoreConfidence.textContent = scenario.verdict.confidence;
+        scoreConstraint.textContent = scenario.verdict.constraint;
+        scoreAudit.textContent = scenario.verdict.audit;
+        progressLabel.textContent = "Decision logged";
+        decisionBar.style.width = "100%";
+      }, 500 + 820 * steps.length));
+    }
+
+    runBtn.addEventListener("click", runScenario);
+    resetBtn.addEventListener("click", () => {
+      clearTimers();
+      renderScenario();
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
+
+    renderScenario();
+  </script>
+</body>
+</html>
