@@ -119,7 +119,7 @@ export function DocumentUploader({
     <div className="mt-8">
       <div className="flex items-end justify-between mb-3">
         <div>
-          <div className="text-[11px] uppercase tracking-widest text-slate-400">Evidence</div>
+          <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">Evidence</div>
           <h2 className="text-lg font-semibold tracking-tight flex items-center gap-2">
             Upload documents
             <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-200 ring-1 ring-indigo-400/30 font-medium normal-case tracking-normal">
@@ -130,7 +130,7 @@ export function DocumentUploader({
         <button
           type="button"
           onClick={() => setShowSamples((s) => !s)}
-          className="text-xs px-3 py-1.5 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10 flex items-center gap-1.5"
+          className="text-xs px-3 py-1.5 rounded-lg bg-slate-900/[0.05] dark:bg-white/5 ring-1 ring-slate-900/10 dark:ring-white/10 hover:bg-slate-900/10 dark:hover:bg-white/10 flex items-center gap-1.5"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-300" /> {showSamples ? "Hide" : "Browse"} samples ({samples.length})
         </button>
@@ -149,20 +149,20 @@ export function DocumentUploader({
           borderColor: dropping ? "rgba(129,140,248,.5)" : "rgba(255,255,255,.1)",
         }}
         className={`cursor-pointer rounded-2xl ring-1 p-8 flex flex-col items-center justify-center text-center transition-colors ${
-          dropping ? "bg-indigo-500/10 ring-indigo-400/40" : "bg-white/[0.03] ring-white/10 hover:bg-white/[0.05]"
+          dropping ? "bg-indigo-500/10 ring-indigo-400/40" : "bg-slate-900/[0.025] dark:bg-white/[0.03] ring-slate-900/10 dark:ring-white/10 hover:bg-slate-900/[0.04] dark:hover:bg-white/[0.05]"
         } ${!caseId ? "opacity-60 pointer-events-none" : ""}`}
       >
         <motion.div
           animate={{ y: dropping ? -4 : 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 22 }}
-          className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-fuchsia-500/20 ring-1 ring-white/15 grid place-items-center mb-3"
+          className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-fuchsia-500/20 ring-1 ring-slate-900/10 dark:ring-white/15 grid place-items-center mb-3"
         >
           <Upload className="w-6 h-6 text-indigo-200" />
         </motion.div>
         <div className="text-sm font-medium">
           {dropping ? "Release to upload" : "Drag 5-6 documents here, or click to select"}
         </div>
-        <div className="text-[11px] text-slate-400 mt-1">
+        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
           CIBIL · Bank Statement · GST · ITR · Ledger · Account Aggregator · PDF / XLSX / CSV / JSON
         </div>
         <input ref={inputRef} type="file" multiple onChange={onFileInput} className="hidden" />
@@ -184,8 +184,8 @@ export function DocumentUploader({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="mt-3 rounded-2xl ring-1 ring-white/10 bg-white/[0.02] p-4">
-              <div className="text-[11px] uppercase tracking-widest text-slate-400 mb-2">
+            <div className="mt-3 rounded-2xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.02] dark:bg-white/[0.02] p-4">
+              <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">
                 Sample library (backend/docs) — one click to attach
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -203,7 +203,7 @@ export function DocumentUploader({
                       className={`text-left rounded-lg px-3 py-2 ring-1 flex items-center gap-3 transition-colors ${
                         used
                           ? "bg-emerald-500/10 ring-emerald-400/30"
-                          : "bg-white/[0.03] ring-white/10 hover:bg-white/[0.06]"
+                          : "bg-slate-900/[0.025] dark:bg-white/[0.03] ring-slate-900/10 dark:ring-white/10 hover:bg-slate-900/[0.05] dark:hover:bg-white/[0.06]"
                       } disabled:cursor-not-allowed`}
                     >
                       <div
@@ -214,7 +214,7 @@ export function DocumentUploader({
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="text-xs font-medium truncate">{s.filename}</div>
-                        <div className="text-[10px] text-slate-400 uppercase tracking-widest">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                           {meta.label} · {prettySize(s.size_bytes)}
                         </div>
                       </div>
@@ -223,7 +223,7 @@ export function DocumentUploader({
                   );
                 })}
                 {!samplesQuery.isLoading && samples.length === 0 && (
-                  <div className="col-span-2 text-xs text-slate-400 text-center py-4">No sample documents found.</div>
+                  <div className="col-span-2 text-xs text-slate-500 dark:text-slate-400 text-center py-4">No sample documents found.</div>
                 )}
               </div>
             </div>
@@ -233,7 +233,7 @@ export function DocumentUploader({
 
       {documents.length > 0 && (
         <div className="mt-5">
-          <div className="text-[11px] uppercase tracking-widest text-slate-400 mb-2">Attached ({documents.length})</div>
+          <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Attached ({documents.length})</div>
           <ul className="space-y-2">
             <AnimatePresence initial={false}>
               {documents.map((doc) => {
@@ -252,7 +252,7 @@ export function DocumentUploader({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, x: 24 }}
                     transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                    className="rounded-lg bg-white/[0.03] ring-1 ring-white/10 p-3"
+                    className="rounded-lg bg-slate-900/[0.025] dark:bg-white/[0.03] ring-1 ring-slate-900/10 dark:ring-white/10 p-3"
                   >
                     <div className="flex items-start gap-3">
                       <motion.div
@@ -286,7 +286,7 @@ export function DocumentUploader({
                             <Wand2 className="w-3 h-3" /> {meta.label}
                           </motion.button>
                           {identSource && (
-                            <span className="text-[10px] text-slate-400">
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400">
                               via {identSource} · <span className={identBand.color}>{Math.round(conf * 100)}% {identBand.label}</span>
                             </span>
                           )}
@@ -299,7 +299,7 @@ export function DocumentUploader({
                       <button
                         type="button"
                         onClick={() => remove(doc)}
-                        className="p-1.5 rounded-md text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 shrink-0"
+                        className="p-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 shrink-0"
                         title="Remove"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -315,7 +315,7 @@ export function DocumentUploader({
                           className="overflow-hidden"
                         >
                           <div className="mt-3 pl-13 flex flex-wrap gap-1.5">
-                            <span className="text-[10px] text-slate-400 self-center mr-1">Override →</span>
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400 self-center mr-1">Override →</span>
                             {DOC_TYPES.map((t) => {
                               const active = doc.doc_type === t.value;
                               return (
@@ -327,7 +327,7 @@ export function DocumentUploader({
                                   className={`text-[10px] px-2 py-0.5 rounded-full ring-1 transition-colors ${
                                     active
                                       ? "bg-white text-slate-900 ring-white cursor-default"
-                                      : "bg-white/5 ring-white/10 text-slate-300 hover:bg-white/10"
+                                      : "bg-slate-900/[0.05] dark:bg-white/5 ring-slate-900/10 dark:ring-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-900/10 dark:hover:bg-white/10"
                                   }`}
                                 >
                                   {t.label}

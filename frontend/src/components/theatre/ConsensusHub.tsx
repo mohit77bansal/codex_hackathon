@@ -26,7 +26,7 @@ export function ConsensusHub({ onFocusAgent }: { onFocusAgent: (k: AgentKey) => 
   const verdictHex = COLOR_HEX[verdict ? stanceColor(verdict.value) : "slate"];
 
   return (
-    <div className="mx-6 mb-5 rounded-2xl ring-1 ring-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.01] p-5 relative overflow-hidden">
+    <div className="mx-6 mb-5 rounded-2xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.01] p-5 relative overflow-hidden">
       <motion.div
         className="absolute inset-0 opacity-40 pointer-events-none"
         animate={{ backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"] }}
@@ -78,7 +78,7 @@ export function ConsensusHub({ onFocusAgent }: { onFocusAgent: (k: AgentKey) => 
       </div>
 
       <div className="relative mt-5 flex items-center justify-between gap-3">
-        <div className="text-[11px] text-slate-400 flex items-center gap-2">
+        <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2">
           <Loader2 className={`w-3 h-3 ${done && verdict ? "" : "animate-spin"}`} />
           {verdict
             ? `Decision delivered · ${verdict.chip}`
@@ -210,7 +210,7 @@ function Gauge({
       </svg>
       <div className="absolute inset-0 grid place-items-center pointer-events-none">
         <div className="text-center">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Consensus</div>
+          <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Consensus</div>
           <motion.div
             key={Math.round(score)}
             className="text-5xl font-bold tabular-nums leading-none mt-1"

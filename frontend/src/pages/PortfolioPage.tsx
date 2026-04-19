@@ -39,15 +39,15 @@ export function PortfolioPage() {
     <div className="flex-1 min-w-0 overflow-y-auto">
       <div className="px-6 pt-6 pb-10">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="text-[11px] uppercase tracking-widest text-slate-400">Portfolio</div>
+          <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">Portfolio</div>
           <h1 className="text-2xl font-semibold tracking-tight">Exposure & concentration</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Book-level view of approved and conditionally-approved applications. Concentration measured by HHI across industry and geography.
           </p>
         </motion.div>
 
         {isLoading || !data ? (
-          <div className="mt-6 text-xs text-slate-400">Loading portfolio...</div>
+          <div className="mt-6 text-xs text-slate-500 dark:text-slate-400">Loading portfolio...</div>
         ) : (
           <>
             <div className="grid grid-cols-4 gap-3 mt-6">
@@ -94,10 +94,10 @@ function Kpi({ label, value, tone, Icon }: { label: string; value: string; tone:
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-4 overflow-hidden"
+      className="relative rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-4 overflow-hidden"
     >
       <span className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl" style={{ background: `${hex}22` }} />
-      <div className="relative text-[11px] text-slate-400 flex items-center gap-1.5">
+      <div className="relative text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
         <Icon className="w-4 h-4" style={{ color: hex }} />
         {label}
       </div>
@@ -131,18 +131,18 @@ function Concentration({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-5"
+      className="rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-5"
     >
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-lg bg-white/5 ring-1 ring-white/10 grid place-items-center text-slate-300">
+        <div className="w-10 h-10 rounded-lg bg-slate-900/[0.05] dark:bg-white/5 ring-1 ring-slate-900/10 dark:ring-white/10 grid place-items-center text-slate-700 dark:text-slate-300">
           <Icon className="w-5 h-5" />
         </div>
         <div>
           <div className="text-sm font-semibold">{title}</div>
-          <div className="text-[11px] text-slate-400">{subtitle}</div>
+          <div className="text-[11px] text-slate-500 dark:text-slate-400">{subtitle}</div>
         </div>
         <div className="ml-auto text-right">
-          <div className="text-[10px] uppercase tracking-widest text-slate-400">HHI</div>
+          <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">HHI</div>
           <div className="text-xl font-semibold tabular-nums" style={{ color: band.color }}>
             {value.toFixed(0)}
           </div>
@@ -154,11 +154,11 @@ function Concentration({
       <div className="mt-4 space-y-2">
         {items.slice(0, 6).map((i) => (
           <div key={i.label}>
-            <div className="flex items-center justify-between text-[11px] text-slate-300">
+            <div className="flex items-center justify-between text-[11px] text-slate-700 dark:text-slate-300">
               <span>{i.label}</span>
               <span className="tabular-nums">{formatInr(i.exposure)}</span>
             </div>
-            <div className="mt-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
+            <div className="mt-1 h-1.5 rounded-full bg-slate-900/[0.05] dark:bg-white/5 overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-fuchsia-400"
                 initial={{ width: 0 }}
@@ -179,7 +179,7 @@ function VerdictMix({ mix }: { mix: { label: string; count: number }[] }) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-5"
+      className="rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-5"
     >
       <div className="text-sm font-semibold flex items-center gap-2">
         <Scale className="w-4 h-4 text-violet-300" /> Verdict mix
@@ -187,11 +187,11 @@ function VerdictMix({ mix }: { mix: { label: string; count: number }[] }) {
       <div className="mt-3 space-y-2">
         {mix.map((m) => (
           <div key={m.label}>
-            <div className="flex items-center justify-between text-[11px] text-slate-300 capitalize">
+            <div className="flex items-center justify-between text-[11px] text-slate-700 dark:text-slate-300 capitalize">
               <span>{m.label}</span>
               <span className="tabular-nums">{m.count}</span>
             </div>
-            <div className="mt-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
+            <div className="mt-1 h-1.5 rounded-full bg-slate-900/[0.05] dark:bg-white/5 overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
                 initial={{ width: 0 }}
@@ -212,7 +212,7 @@ function TopList({ title, items, Icon }: { title: string; items: { label: string
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-5"
+      className="rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-5"
     >
       <div className="text-sm font-semibold flex items-center gap-2">
         <Icon className="w-4 h-4 text-sky-300" /> {title}
@@ -225,7 +225,7 @@ function TopList({ title, items, Icon }: { title: string; items: { label: string
               <span className="text-slate-500 tabular-nums">#{idx + 1}</span>
               <span>{i.label}</span>
             </span>
-            <span className="tabular-nums text-slate-300">{formatInr(i.exposure)}</span>
+            <span className="tabular-nums text-slate-700 dark:text-slate-300">{formatInr(i.exposure)}</span>
           </li>
         ))}
       </ul>
@@ -239,10 +239,10 @@ function LoanTypeMix({ items }: { items: { label: string; count: number }[] }) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-4 rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-5"
+      className="mt-4 rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-5"
     >
       <div className="text-sm font-semibold">Loan type mix</div>
-      <div className="mt-3 flex items-center gap-2 h-3 rounded-full overflow-hidden bg-white/5">
+      <div className="mt-3 flex items-center gap-2 h-3 rounded-full overflow-hidden bg-slate-900/[0.05] dark:bg-white/5">
         {items.map((i, idx) => {
           const colors = ["#818cf8", "#34d399", "#fbbf24", "#fb7185", "#38bdf8"];
           return (
@@ -257,7 +257,7 @@ function LoanTypeMix({ items }: { items: { label: string; count: number }[] }) {
           );
         })}
       </div>
-      <div className="mt-3 flex flex-wrap gap-3 text-[11px] text-slate-400">
+      <div className="mt-3 flex flex-wrap gap-3 text-[11px] text-slate-500 dark:text-slate-400">
         {items.map((i, idx) => {
           const colors = ["#818cf8", "#34d399", "#fbbf24", "#fb7185", "#38bdf8"];
           return (

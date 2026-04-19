@@ -55,14 +55,14 @@ export function CaseQueuePage() {
       <TopBar query={query} setQuery={setQuery} />
 
       <div className="px-6 pt-3 pb-4 flex items-center gap-2">
-        <div className="text-xs text-slate-400">
+        <div className="text-xs text-slate-500 dark:text-slate-400">
           {cases?.length ?? 0} applications · {filtered.length} matching
         </div>
         <div className="ml-auto flex items-center gap-2">
           <button
             onClick={() => seed.mutate()}
             disabled={seed.isPending}
-            className="px-3 py-1.5 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10 text-xs flex items-center gap-1.5 disabled:opacity-50"
+            className="px-3 py-1.5 rounded-lg bg-slate-900/[0.05] dark:bg-white/5 ring-1 ring-slate-900/10 dark:ring-white/10 hover:bg-slate-900/10 dark:hover:bg-white/10 text-xs flex items-center gap-1.5 disabled:opacity-50"
           >
             <Plus className="w-3 h-3" /> Seed 8 synthetic applications
           </button>
@@ -83,21 +83,21 @@ export function CaseQueuePage() {
             className={`px-3 py-1.5 rounded-full text-xs capitalize whitespace-nowrap ring-1 transition-all ${
               filter === f
                 ? "bg-white text-slate-900 ring-white"
-                : "bg-white/5 ring-white/10 text-slate-300 hover:bg-white/10"
+                : "bg-slate-900/[0.05] dark:bg-white/5 ring-slate-900/10 dark:ring-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-900/10 dark:hover:bg-white/10"
             }`}
           >
             {f}
           </button>
         ))}
-        <button className="ml-auto text-xs text-slate-400 hover:text-white flex items-center gap-1">
+        <button className="ml-auto text-xs text-slate-500 dark:text-slate-400 hover:text-white flex items-center gap-1">
           <Filter className="w-3 h-3" /> Advanced
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-4">
-        {isLoading && <div className="text-xs text-slate-400">Loading applications...</div>}
+        {isLoading && <div className="text-xs text-slate-500 dark:text-slate-400">Loading applications...</div>}
         {!isLoading && filtered.length === 0 && (
-          <div className="text-xs text-slate-400 py-10 text-center">
+          <div className="text-xs text-slate-500 dark:text-slate-400 py-10 text-center">
             No applications yet. Click "Seed 8 synthetic applications" or "New application" to start.
           </div>
         )}
@@ -110,18 +110,18 @@ export function CaseQueuePage() {
               transition={{ delay: i * 0.03, duration: 0.3 }}
               whileHover={{ y: -2 }}
               onClick={() => nav(`/cases/${c.id}`)}
-              className="text-left rounded-xl p-4 ring-1 ring-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:ring-white/20 transition-all"
+              className="text-left rounded-xl p-4 ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] hover:bg-slate-900/[0.05] dark:hover:bg-white/[0.06] hover:ring-slate-900/15 dark:hover:ring-white/20 transition-all"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <div className="text-sm font-semibold truncate">{c.applicant_name}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                     {c.external_id} · {c.loan_type.replace("_", " ")}
                   </div>
                 </div>
                 <div className="text-right shrink-0">
                   <div className="text-sm font-semibold tabular-nums">{formatInr(c.amount_inr)}</div>
-                  <div className="text-[11px] text-slate-400 capitalize">{c.sector}</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 capitalize">{c.sector}</div>
                 </div>
               </div>
               <div className="mt-3 flex items-center gap-1.5 flex-wrap">

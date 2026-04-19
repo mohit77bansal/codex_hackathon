@@ -49,11 +49,11 @@ export function CaseIntakePage() {
     <div className="flex-1 min-w-0 overflow-y-auto">
       <div className="px-6 pt-10 pb-12 max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="text-[11px] uppercase tracking-widest text-slate-400">New application</div>
+          <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">New application</div>
           <h1 className="text-3xl font-semibold tracking-tight">
             Create an application, attach evidence.
           </h1>
-          <p className="text-sm text-slate-400 mt-2 max-w-2xl">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-2xl">
             The expert panel reads whatever you attach — CIBIL, bank statement, GST filings, AA account authentication. Application ID is generated automatically.
           </p>
         </motion.div>
@@ -64,14 +64,14 @@ export function CaseIntakePage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-6 rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6"
+          className="mt-6 rounded-2xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-6"
         >
           <div className="grid grid-cols-[auto_1fr] gap-5 items-center">
             {/* Auto application ID */}
             <div>
-              <div className="text-[10px] uppercase tracking-widest text-slate-400 mb-1.5">Application ID</div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Application ID</div>
               <div className="flex items-center gap-2">
-                <div className="px-4 py-2.5 rounded-lg bg-slate-950/60 ring-1 ring-white/10 font-mono text-sm tabular-nums min-w-[140px]">
+                <div className="px-4 py-2.5 rounded-lg bg-white/80 dark:bg-slate-950/60 ring-1 ring-slate-900/10 dark:ring-white/10 font-mono text-sm tabular-nums min-w-[140px]">
                   {externalId}
                 </div>
                 <button
@@ -79,7 +79,7 @@ export function CaseIntakePage() {
                   disabled={!!createdId}
                   onClick={() => setExternalId(newExternalId())}
                   title="Regenerate"
-                  className="p-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10 text-slate-300 disabled:opacity-40"
+                  className="p-2 rounded-lg bg-slate-900/[0.05] dark:bg-white/5 ring-1 ring-slate-900/10 dark:ring-white/10 hover:bg-slate-900/10 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 disabled:opacity-40"
                 >
                   <RefreshCcw className="w-3.5 h-3.5" />
                 </button>
@@ -88,27 +88,27 @@ export function CaseIntakePage() {
 
             {/* Applicant name */}
             <label className="block">
-              <div className="text-[10px] uppercase tracking-widest text-slate-400 mb-1.5">Applicant name</div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Applicant name</div>
               <input
                 value={applicantName}
                 onChange={(e) => setApplicantName(e.target.value)}
                 disabled={!!createdId}
                 placeholder="e.g. Rakesh Traders Pvt Ltd"
                 autoFocus
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-950/60 ring-1 ring-white/10 text-sm focus:outline-none focus:ring-indigo-400/50 disabled:opacity-70"
+                className="w-full px-4 py-2.5 rounded-lg bg-white/80 dark:bg-slate-950/60 ring-1 ring-slate-900/10 dark:ring-white/10 text-sm focus:outline-none focus:ring-indigo-400/50 disabled:opacity-70"
               />
             </label>
           </div>
 
           {!createdId ? (
             <motion.div layout className="mt-5 flex items-center justify-between gap-3">
-              <div className="text-[11px] text-slate-400">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">
                 Structured fields stay empty. The expert panel reads your attached documents to form a view.
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => nav("/queue")}
-                  className="px-4 py-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10 text-sm"
+                  className="px-4 py-2 rounded-lg bg-slate-900/[0.05] dark:bg-white/5 ring-1 ring-slate-900/10 dark:ring-white/10 hover:bg-slate-900/10 dark:hover:bg-white/10 text-sm"
                 >
                   Cancel
                 </button>
@@ -139,7 +139,7 @@ export function CaseIntakePage() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-3 py-1.5 rounded-lg bg-white/10 text-emerald-50 text-xs hover:bg-white/20"
+                  className="px-3 py-1.5 rounded-lg bg-slate-900/10 dark:bg-white/10 text-emerald-50 text-xs hover:bg-slate-900/15 dark:bg-white/20"
                 >
                   New case
                 </button>

@@ -7,6 +7,10 @@ backend/staticfiles/
 backend/media/
 backend/.env
 
+# Secrets — never commit
+.env
+*.env.local
+
 # Python
 *.pyc
 *.pyo

@@ -35,15 +35,15 @@ export function SettingsPage() {
     <div className="flex-1 min-w-0 overflow-y-auto">
       <div className="px-6 pt-6 pb-10 max-w-5xl">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="text-[11px] uppercase tracking-widest text-slate-400">Runtime</div>
+          <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">Runtime</div>
           <h1 className="text-2xl font-semibold tracking-tight">Settings & health</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Live view of how the swarm is configured and whether the audit chain is intact.
           </p>
         </motion.div>
 
         {isLoading || !data ? (
-          <div className="mt-6 text-xs text-slate-400">Loading runtime state...</div>
+          <div className="mt-6 text-xs text-slate-500 dark:text-slate-400">Loading runtime state...</div>
         ) : (
           <>
             <SectionHeading title="LLM configuration" icon={Brain} />
@@ -113,12 +113,12 @@ export function SettingsPage() {
             {purge.isSuccess && <div className="mt-2 text-[11px] text-emerald-300">Purged. Queue is empty.</div>}
 
             <SectionHeading title="Active credit policy" icon={Database} />
-            <div className="rounded-xl ring-1 ring-white/10 bg-slate-950/60 p-4">
+            <div className="rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-white/80 dark:bg-slate-950/60 p-4">
               <div className="flex items-center justify-between mb-2">
-                <div className="text-xs text-slate-400 truncate">{data.policy.path}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">{data.policy.path}</div>
                 <div className="text-[10px] text-slate-500">read-only</div>
               </div>
-              <pre className="text-[12px] leading-relaxed font-mono text-slate-200 whitespace-pre-wrap">
+              <pre className="text-[12px] leading-relaxed font-mono text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
                 {data.policy.content || "(policy file not readable)"}
               </pre>
             </div>
@@ -133,7 +133,7 @@ function SectionHeading({ title, icon: Icon }: { title: string; icon: any }) {
   return (
     <div className="mt-8 mb-3 flex items-baseline gap-3">
       <div className="flex items-center gap-2">
-        <Icon className="w-4 h-4 text-slate-400" />
+        <Icon className="w-4 h-4 text-slate-500 dark:text-slate-400" />
         <div className="text-sm font-semibold">{title}</div>
       </div>
       <div className="h-px flex-1 bg-gradient-to-r from-white/15 via-white/5 to-transparent" />
@@ -161,16 +161,16 @@ function Row({
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-4"
+      className="rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-4"
     >
-      <div className="text-[11px] uppercase tracking-widest text-slate-400">{label}</div>
+      <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">{label}</div>
       <div
         className={`mt-1 text-base font-semibold ${mono ? "font-mono text-sm" : ""}`}
         style={{ color: hex }}
       >
         {value}
       </div>
-      {help && <div className="mt-2 text-[11px] text-slate-400 leading-relaxed">{help}</div>}
+      {help && <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">{help}</div>}
     </motion.div>
   );
 }
@@ -178,9 +178,9 @@ function Row({
 function HealthCard({ label, value, tone, Icon }: { label: string; value: string | number; tone: string; Icon: any }) {
   const hex = { emerald: "#34d399", rose: "#fb7185", indigo: "#818cf8", sky: "#38bdf8" }[tone] || "#cbd5e1";
   return (
-    <div className="relative rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-4 overflow-hidden">
+    <div className="relative rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-4 overflow-hidden">
       <span className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl" style={{ background: `${hex}22` }} />
-      <div className="relative text-[11px] text-slate-400 flex items-center gap-1.5">
+      <div className="relative text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
         <Icon className="w-4 h-4" style={{ color: hex }} />
         {label}
       </div>

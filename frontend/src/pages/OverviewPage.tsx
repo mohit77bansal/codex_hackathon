@@ -49,7 +49,7 @@ export function OverviewPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="relative rounded-xl ring-1 ring-white/10 bg-white/[0.03] p-4 overflow-hidden"
+              className="relative rounded-xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-4 overflow-hidden"
             >
               <motion.span
                 className="absolute -right-8 -top-8 w-28 h-28 rounded-full blur-2xl"
@@ -57,7 +57,7 @@ export function OverviewPage() {
                 animate={{ scale: [1, 1.08, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
-              <div className="relative text-[11px] text-slate-400 flex items-center gap-1.5">
+              <div className="relative text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <k.Icon className="w-4 h-4" style={{ color: hex }} />
                 {k.label}
               </div>
@@ -71,14 +71,14 @@ export function OverviewPage() {
               >
                 {display}
               </div>
-              <div className="relative text-[11px] text-slate-400 mt-0.5 flex items-center gap-1">
+              <div className="relative text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1">
                 <ArrowUpRight className="w-3 h-3" /> {k.delta}
               </div>
             </motion.div>
           );
         })}
       </div>
-      <div className="px-6 pb-10 text-sm text-slate-300 max-w-3xl">
+      <div className="px-6 pb-10 text-sm text-slate-700 dark:text-slate-300 max-w-3xl">
         <motion.h2
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,7 +86,7 @@ export function OverviewPage() {
         >
           Six expert minds, one accountable call.
         </motion.h2>
-        <p className="text-slate-400 mt-2 leading-relaxed">
+        <p className="text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
           Each application fans out to six experts — Bureau, Bank, Fraud, Income, Policy, Behavioural — who disagree openly.
           The Lead Reviewer reframes the tradeoff, and the Final Governor issues a confidence-backed verdict with a full
           audit trail. Click into any application to watch the panel reason in real time.

@@ -51,15 +51,15 @@ export function AgentsPage() {
           className="flex items-end justify-between"
         >
           <div>
-            <div className="text-[11px] uppercase tracking-widest text-slate-400">Roster</div>
+            <div className="text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">Roster</div>
             <h1 className="text-2xl font-semibold tracking-tight">Experts</h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
               Six experts + one Lead + one Governor. Same spine, different souls depending on the domain.
             </p>
           </div>
-          <div className="text-xs text-slate-400 flex items-center gap-3">
+          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-3">
             <span>
-              Total runs <b className="text-slate-100 tabular-nums">{agents.reduce((s, a) => s + a.run_count, 0)}</b>
+              Total runs <b className="text-slate-900 dark:text-slate-100 tabular-nums">{agents.reduce((s, a) => s + a.run_count, 0)}</b>
             </span>
             <span>
               Failures <b className="text-rose-300 tabular-nums">{agents.reduce((s, a) => s + a.failed, 0)}</b>
@@ -67,7 +67,7 @@ export function AgentsPage() {
           </div>
         </motion.div>
 
-        {isLoading && <div className="mt-6 text-xs text-slate-400">Loading roster...</div>}
+        {isLoading && <div className="mt-6 text-xs text-slate-500 dark:text-slate-400">Loading roster...</div>}
 
         {!isLoading && (
           <>
@@ -96,7 +96,7 @@ function SectionHeading({ title, subtitle }: { title: string; subtitle: string }
     <div className="mt-8 mb-3 flex items-baseline justify-between">
       <div>
         <div className="text-sm font-semibold">{title}</div>
-        <div className="text-[11px] text-slate-400">{subtitle}</div>
+        <div className="text-[11px] text-slate-500 dark:text-slate-400">{subtitle}</div>
       </div>
       <div className="h-px flex-1 mx-4 bg-gradient-to-r from-white/15 via-white/5 to-transparent" />
     </div>
@@ -114,7 +114,7 @@ function AgentTile({ agent, delay }: { agent: AgentStat; delay: number }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="relative rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-5 overflow-hidden"
+      className="relative rounded-2xl ring-1 ring-slate-900/10 dark:ring-white/10 bg-slate-900/[0.025] dark:bg-white/[0.03] p-5 overflow-hidden"
     >
       <motion.span
         className="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-3xl pointer-events-none"
@@ -131,14 +131,14 @@ function AgentTile({ agent, delay }: { agent: AgentStat; delay: number }) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-sm font-semibold truncate">{agent.name}</div>
-          <div className="text-[11px] text-slate-400 truncate">{agent.short}</div>
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{agent.short}</div>
         </div>
-        <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/5 ring-1 ring-white/10 text-slate-300">
+        <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-slate-900/[0.05] dark:bg-white/5 ring-1 ring-slate-900/10 dark:ring-white/10 text-slate-700 dark:text-slate-300">
           {agent.model_tier}
         </span>
       </div>
 
-      <p className="relative mt-3 text-xs text-slate-300 leading-relaxed">{agent.role}</p>
+      <p className="relative mt-3 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{agent.role}</p>
 
       <div className="relative grid grid-cols-3 gap-2 mt-4 text-center">
         <Stat label="Runs" value={agent.run_count.toString()} />
@@ -148,8 +148,8 @@ function AgentTile({ agent, delay }: { agent: AgentStat; delay: number }) {
 
       {total > 0 && (
         <div className="relative mt-4">
-          <div className="text-[10px] uppercase tracking-widest text-slate-400 mb-1.5">Stance mix</div>
-          <div className="h-2 rounded-full bg-white/5 overflow-hidden flex">
+          <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Stance mix</div>
+          <div className="h-2 rounded-full bg-slate-900/[0.05] dark:bg-white/5 overflow-hidden flex">
             {agent.stance_mix.approve > 0 && (
               <motion.div
                 className="h-full bg-emerald-400/80"
@@ -183,7 +183,7 @@ function AgentTile({ agent, delay }: { agent: AgentStat; delay: number }) {
               />
             )}
           </div>
-          <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+          <div className="mt-2 flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400">
             <Legend dot="bg-emerald-400" label={`Approve ${agent.stance_mix.approve}`} />
             <Legend dot="bg-amber-400" label={`Conditional ${agent.stance_mix.conditional}`} />
             <Legend dot="bg-sky-400" label={`Review ${agent.stance_mix.review}`} />
@@ -192,9 +192,9 @@ function AgentTile({ agent, delay }: { agent: AgentStat; delay: number }) {
         </div>
       )}
 
-      <div className="relative mt-4 flex items-center justify-between text-[11px] text-slate-400">
+      <div className="relative mt-4 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
         <span>
-          Avg latency <span className="text-slate-200 tabular-nums">{agent.avg_latency_ms} ms</span>
+          Avg latency <span className="text-slate-800 dark:text-slate-200 tabular-nums">{agent.avg_latency_ms} ms</span>
         </span>
         {agent.failed > 0 ? (
           <span className="text-rose-300 flex items-center gap-1">
@@ -212,9 +212,9 @@ function AgentTile({ agent, delay }: { agent: AgentStat; delay: number }) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/10 py-2">
-      <div className="text-[10px] uppercase tracking-widest text-slate-400">{label}</div>
-      <div className="text-sm font-semibold tabular-nums text-slate-100 mt-0.5">{value}</div>
+    <div className="rounded-lg bg-slate-900/[0.025] dark:bg-white/[0.03] ring-1 ring-slate-900/10 dark:ring-white/10 py-2">
+      <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">{label}</div>
+      <div className="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100 mt-0.5">{value}</div>
     </div>
   );
 }
