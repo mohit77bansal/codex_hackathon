@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from apps.api import api as ninja_api
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", ninja_api.urls),
+    path("events/", include("django_eventstream.urls")),
 ]
 
 if settings.DEBUG:
