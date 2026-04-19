@@ -1,6 +1,4 @@
-[![Demo Video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)]([https://www.youtube.com/watch?v=VIDEO_ID](https://youtu.be/NzLYz-x1Hac))
-
-[![Demo](./assets/demo.gif)](https://youtu.be/NzLYz-x1Hac)
+Demo Video:- https://youtu.be/NzLYz-x1Hac
 
 # Decision Swarm OS — Credit Underwriting
 
