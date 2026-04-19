@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Building2, FileText, Play, ShieldAlert } from "lucide-react";
+import { ArrowLeft, Building2, Play, ShieldAlert } from "lucide-react";
 
 import { api } from "../api/client";
 import type { AgentKey } from "../lib/types";
@@ -158,7 +158,7 @@ export function CaseTheatrePage() {
         <StatBlock label="Policy version" value={detail?.applicant ? "v1" : "v1"} tone="fuchsia" />
       </motion.div>
 
-      <ConsensusHub onFocusAgent={(k) => setFocusAgent(k)} />
+      <ConsensusHub onFocusAgent={(k) => setFocusAgent(k)} isRunning={runMut.isPending} />
       <LeadPanel />
       <ReasoningStream agentKey={focus} position={focusPosition} />
       <DecisionCard caseDetail={detail} />

@@ -32,7 +32,8 @@ export function AgentCard({
   const meta = AGENT_META[agentKey];
   const Icon = ICONS[agentKey] || Activity;
   const thinking = state === "thinking";
-  const done = state === "done" && !!position;
+  const hasPosition = !!position;
+  const done = hasPosition;
 
   const stance = position?.stance;
   const stanceTone = stance ? stanceColor(stance) : "slate";
@@ -101,7 +102,7 @@ export function AgentCard({
       </div>
 
       <div className="relative mt-2.5">
-        {thinking && (
+        {thinking && !hasPosition && (
           <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
             <Loader2 className="w-3 h-3 animate-spin" />
             <motion.span animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 1.6, repeat: Infinity }}>
@@ -109,7 +110,7 @@ export function AgentCard({
             </motion.span>
           </div>
         )}
-        {state === "idle" && <div className="text-[11px] text-slate-500">Awaiting signal</div>}
+        {state === "idle" && !hasPosition && <div className="text-[11px] text-slate-500">Awaiting signal</div>}
         {done && position && (
           <>
             <div className="flex items-baseline gap-1">

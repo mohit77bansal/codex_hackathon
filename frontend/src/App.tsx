@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import { ErrorBoundary } from "./components/common/ErrorBoundary";
 import { Shell } from "./components/common/Shell";
 import { AgentsPage } from "./pages/AgentsPage";
 import { CaseIntakePage } from "./pages/CaseIntakePage";
@@ -13,17 +14,26 @@ import { SettingsPage } from "./pages/SettingsPage";
 export default function App() {
   return (
     <Shell>
-      <Routes>
-        <Route path="/" element={<OverviewPage />} />
-        <Route path="/queue" element={<CaseQueuePage />} />
-        <Route path="/intake" element={<CaseIntakePage />} />
-        <Route path="/cases/:id" element={<CaseTheatrePage />} />
-        <Route path="/agents" element={<AgentsPage />} />
-        <Route path="/portfolio" element={<PortfolioPage />} />
-        <Route path="/escalations" element={<EscalationsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <ErrorBoundary label="route">
+        <Routes>
+          <Route path="/" element={<OverviewPage />} />
+          <Route path="/queue" element={<CaseQueuePage />} />
+          <Route path="/intake" element={<CaseIntakePage />} />
+          <Route
+            path="/cases/:id"
+            element={
+              <ErrorBoundary label="CaseTheatrePage">
+                <CaseTheatrePage />
+              </ErrorBoundary>
+            }
+          />
+          <Route path="/agents" element={<AgentsPage />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/escalations" element={<EscalationsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </ErrorBoundary>
     </Shell>
   );
 }

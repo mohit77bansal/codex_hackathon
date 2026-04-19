@@ -11,11 +11,19 @@ import { useSwarmStore } from "../../store/swarmStore";
 const LEFT: AgentKey[] = ["bureau", "bank", "fraud"];
 const RIGHT: AgentKey[] = ["income", "policy", "behaviour"];
 
-export function ConsensusHub({ onFocusAgent }: { onFocusAgent: (k: AgentKey) => void }) {
+export function ConsensusHub({
+  onFocusAgent,
+  isRunning = false,
+}: {
+  onFocusAgent: (k: AgentKey) => void;
+  isRunning?: boolean;
+}) {
   const agents = useSwarmStore((s) => s.agents);
   const verdict = useSwarmStore((s) => s.verdict);
   const progress = useSwarmStore((s) => s.progress);
+  const phase = useSwarmStore((s) => s.phase);
   const debate = useSwarmStore((s) => s.debate);
+  const running = isRunning || phase === "running";
 
   const done = (Object.keys(agents) as AgentKey[])
     .filter((k) => k !== "lead" && k !== "governor")
@@ -79,12 +87,16 @@ export function ConsensusHub({ onFocusAgent }: { onFocusAgent: (k: AgentKey) => 
 
       <div className="relative mt-5 flex items-center justify-between gap-3">
         <div className="text-[11px] text-slate-400 flex items-center gap-2">
-          <Loader2 className={`w-3 h-3 ${done && verdict ? "" : "animate-spin"}`} />
-          {verdict
-            ? `Decision delivered · ${verdict.chip}`
-            : done
-              ? "Experts complete · lead and governor closing"
-              : `Running experts · progress ${progress}%`}
+          <Loader2 className={`w-3 h-3 ${running ? "animate-spin" : ""}`} />
+          {running
+            ? `Running experts · progress ${progress}%`
+            : verdict
+              ? `Decision delivered · ${verdict.chip}`
+              : phase === "idle"
+                ? "Awaiting run · click Run expert panel to convene"
+                : done
+                  ? "Experts complete · lead and governor closing"
+                  : `Running experts · progress ${progress}%`}
           {debate?.pairs && debate.pairs.length > 0 && !verdict && (
             <span className="ml-2 text-rose-300 text-[10px] uppercase tracking-widest">
               · {debate.pairs.length} fault line{debate.pairs.length > 1 ? "s" : ""}

@@ -10,6 +10,15 @@ export function DecisionCard({ caseDetail }: { caseDetail: CaseDetail | undefine
   const verdict = useSwarmStore((s) => s.verdict);
   const decision = caseDetail?.final_decision;
 
+  const stance = verdict?.value || decision?.verdict || "conditional";
+  const confidence = verdict?.confidence ?? decision?.confidence ?? 0;
+  const rationale = verdict?.rationale || decision?.rationale || "";
+  const chip = verdict?.chip || decision?.chip_label || "";
+  const hex = COLOR_HEX[stanceColor(stance)];
+  const conditions = decision?.conditions || [];
+  const checkpoints = decision?.review_checkpoints || [];
+  const animatedConfidence = useCountUp(confidence * 100, 1400, [confidence]);
+
   if (!verdict && !decision) {
     return (
       <div className="mx-6 mb-6 rounded-2xl ring-1 ring-white/10 bg-white/[0.02] p-5 text-xs text-slate-400">
@@ -19,15 +28,6 @@ export function DecisionCard({ caseDetail }: { caseDetail: CaseDetail | undefine
       </div>
     );
   }
-
-  const stance = verdict?.value || decision?.verdict || "conditional";
-  const confidence = verdict?.confidence ?? decision?.confidence ?? 0;
-  const rationale = verdict?.rationale || decision?.rationale || "";
-  const chip = verdict?.chip || decision?.chip_label || "";
-  const hex = COLOR_HEX[stanceColor(stance)];
-  const conditions = decision?.conditions || [];
-  const checkpoints = decision?.review_checkpoints || [];
-  const animatedConfidence = useCountUp(confidence * 100, 1400, [confidence]);
 
   return (
     <motion.section

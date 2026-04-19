@@ -3,9 +3,11 @@ import { create } from "zustand";
 import type { AgentKey, CaseDetail, Position } from "../lib/types";
 
 export type AgentState = "idle" | "thinking" | "done" | "failed";
+export type SwarmPhase = "idle" | "running" | "complete";
 
 interface SwarmState {
   caseId: string | null;
+  phase: SwarmPhase;
   agents: Record<AgentKey, { state: AgentState; position?: Position }>;
   timeline: { id: string; title: string; body: string; at: string }[];
   debate: { pairs: [string, string, number, string][]; topics: string[] } | null;
@@ -15,6 +17,15 @@ interface SwarmState {
   setCase: (c: CaseDetail) => void;
   reset: (caseId: string) => void;
   handleEvent: (evt: Record<string, unknown>) => void;
+}
+
+const RUNNING_STATUSES = new Set(["running", "debating"]);
+const COMPLETE_STATUSES = new Set(["decided", "approved", "rejected", "conditional", "escalated", "overridden"]);
+
+function phaseFromCase(c: CaseDetail): SwarmPhase {
+  if (c.final_decision || COMPLETE_STATUSES.has(c.status)) return "complete";
+  if (RUNNING_STATUSES.has(c.status) || c.positions.length > 0) return "running";
+  return "idle";
 }
 
 const EMPTY_AGENT: Record<AgentKey, { state: AgentState; position?: Position }> = {
@@ -30,6 +41,7 @@ const EMPTY_AGENT: Record<AgentKey, { state: AgentState; position?: Position }> 
 
 export const useSwarmStore = create<SwarmState>((set, get) => ({
   caseId: null,
+  phase: "idle",
   agents: { ...EMPTY_AGENT },
   timeline: [],
   debate: null,
@@ -39,6 +51,7 @@ export const useSwarmStore = create<SwarmState>((set, get) => ({
   reset: (caseId) =>
     set({
       caseId,
+      phase: "idle",
       agents: { ...EMPTY_AGENT },
       timeline: [],
       debate: null,
@@ -55,6 +68,7 @@ export const useSwarmStore = create<SwarmState>((set, get) => ({
     if (c.final_decision) agents.governor = { state: "done" };
     set({
       caseId: c.id,
+      phase: phaseFromCase(c),
       agents,
       timeline: [],
       debate: c.debate
@@ -79,13 +93,21 @@ export const useSwarmStore = create<SwarmState>((set, get) => ({
     const state = get();
     switch (type) {
       case "swarm.started": {
-        set({ progress: 8, timeline: [makeTimeline("swarm", "Swarm ignited", "Specialists fanning out.")] });
+        set({
+          phase: "running",
+          progress: 8,
+          timeline: [makeTimeline("swarm", "Swarm ignited", "Specialists fanning out.")],
+        });
         return;
       }
       case "agent.started": {
         const key = String(evt.agent_key) as AgentKey;
+        const existing = state.agents[key];
         set({
-          agents: { ...state.agents, [key]: { state: "thinking" } },
+          agents: {
+            ...state.agents,
+            [key]: { state: "thinking", position: existing?.position },
+          },
           progress: Math.max(state.progress, 14),
         });
         return;
@@ -139,6 +161,7 @@ export const useSwarmStore = create<SwarmState>((set, get) => ({
       }
       case "decision.final": {
         set({
+          phase: "complete",
           verdict: {
             value: String(evt.verdict || ""),
             chip: String(evt.chip_label || ""),
